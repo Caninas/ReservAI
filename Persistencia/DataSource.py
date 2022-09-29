@@ -39,5 +39,5 @@ class DataSource:
 
 
     def apagar(self):
-        self.__cache = {"clientes":[], "produtos":[]}
+        self.__cache = {"gerente":[], "funcionarios":[], "hospedes":[]}
         pickle.dump(self.__cache, open(self.__arquivo, "wb"))

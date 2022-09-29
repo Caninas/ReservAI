@@ -9,6 +9,14 @@ class Gerente:
     def cpf(self):
         return self.__cpf
 
+    @property
+    def nome(self):
+        return self.__nome
+
+    @property
+    def senha(self):
+        return self.__senha
+
     @cpf.setter
     def cpf(self, cpf: str):
         self.__cpf = cpf
