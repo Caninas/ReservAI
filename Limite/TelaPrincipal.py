@@ -5,7 +5,7 @@ import PySimpleGUI as sg
 sg.theme('DarkAmber')
 
 
-class TelaSistema:
+class TelaPrincipal:
 
 
     def mostra_mensagem(self, msg):

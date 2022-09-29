@@ -1,7 +1,7 @@
 #arquivo de iniciacao do sistema
 
-from Controle.controlador_sistema import ControladorSistema
+from Controle.ControladorPrincipal import ControladorPrincipal
 #TODO IMPORTAR CLASSE CORRETA E INICALIZAR SISTEMA
 
 if __name__ == "__main__":
-  ControladorSistema().inicializa_sistema()
+  ControladorPrincipal().inicializa_sistema()
