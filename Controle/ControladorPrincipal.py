@@ -23,7 +23,7 @@ class ControladorPrincipal:
         self.__privilegio = None
 
         self.__dataSource = DataSource()
-        self.__DAOgerente = DAOgerente(self.__dataSource)
+        self.__DAOgerente = DAOgerente(self.__dataSource, self.__fernet)
         
         self.__tela_principal = TelaPrincipal()
 
@@ -52,7 +52,7 @@ class ControladorPrincipal:
         if gerente != 0:
             self.__usuario_logado = gerente
             self.__privilegio = 1
-            print("usuario:", gerente.nome)
+            print("usuario:", gerente.usuario)
         else:
             if funcionario != 0:
                 self.__usuario_logado = funcionario
@@ -74,7 +74,7 @@ class ControladorPrincipal:
 
     def abrir_menu(self):
         if self.__privilegio:
-            self.__controlador_gerente.abre_tela()  # fazer telas
+            self.__controlador_gerente.abre_tela()  # TelaMenu
         else:
             self.__controlador_funcionario.abre_tela()
 
@@ -83,13 +83,19 @@ class ControladorPrincipal:
 
         while True:
             opçao, valores = self.__tela_principal.opcoes_login()
+
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
+                self.__tela_principal.close_login()
+                self.encerrar_sistema()
+                break
+            
             print(opçao, valores)
             if self.validar_usuario(valores) == 0:
                 print("ERROR: USUARIO OU SENHA ERRADOS")
                 #self.__tela_principal.error()
             else:                    
                 self.__tela_principal.msg("USUARIO ENTROU")
-                #lista_opçoes[opçao]()
+                lista_opçoes[opçao]()
                 
             self.__tela_principal.close_login()
 
