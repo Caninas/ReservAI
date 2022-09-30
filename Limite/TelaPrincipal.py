@@ -5,8 +5,7 @@ import PySimpleGUI as sg
 class TelaPrincipal():
 
     def __init__(self):
-        self.__window = None
-        #self.cadastro_gerente()
+        self.__window_login = None
         self.login()
 
     def login(self):
@@ -19,17 +18,6 @@ class TelaPrincipal():
             [sg.Button('Sair', key=0)]
                 ]
         self.__window_login = sg.Window('Login no sistema').Layout(layout)
-
-    # def cadastro_gerente(self):
-    #     sg.ChangeLookAndFeel('Reddit')
-    #     layout = [
-    #         [sg.Text('Cadastro Gerente')],
-    #         [sg.Text('Nome'), sg.Input(key="Nome")],
-    #         [sg.Text('Senha'), sg.Input(key="senha")],
-    #         [sg.Button('Cadastrar', key="cadastrar")],
-    #         [sg.Button('Sair', key=0)]
-    #             ]
-    #     self.__window_cadastro_gerente = sg.Window('Cadastro Gerente').Layout(layout)
 
     def cadastro_gerente_primeira_vez(self):
         sg.ChangeLookAndFeel('Reddit')
