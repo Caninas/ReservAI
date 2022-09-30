@@ -1,12 +1,12 @@
 
 #TODO FAZER IMPORTS
-
+import PySimpleGUI as sg
 
 from cryptography.fernet import Fernet
 from Limite.TelaPrincipal import TelaPrincipal
 from Entidade.Gerente import Gerente
 
-# from Controle.ControladorGerente import ControladorGerente
+from Controle.ControladorGerente import ControladorGerente
 # from Controle.ControladorFuncionario import ControladorFuncionario
 # from Controle.ControladorHospede import ControladorHospede
 
@@ -17,16 +17,18 @@ from Persistencia.DataSource import DataSource
 class ControladorPrincipal:
     def __init__(self):
         self.__fernet = Fernet(b'DqaysoWHxzFAoi4ZUM5GeMYZitArP5lBiGOUEooEgwk=')
-        # self.__controlador_gerente = ControladorGerente(self)
-        # self.__controlador_funcionario = ControladorFuncionario(self)
-        # self.__controlador_hospede = ControladorHospede(self)
+
         self.__usuario_logado = None
         self.__privilegio = None
 
         self.__dataSource = DataSource()
         self.__DAOgerente = DAOgerente(self.__dataSource, self.__fernet)
-        
+
+        self.__controlador_gerente = ControladorGerente(self, self.__DAOgerente)
+        # self.__controlador_funcionario = ControladorFuncionario(self)
+        # self.__controlador_hospede = ControladorHospede(self)
         self.__tela_principal = TelaPrincipal()
+
 
     def iniciar_sistema(self):
         if len(self.__DAOgerente.get_all()) > 0:
@@ -46,7 +48,7 @@ class ControladorPrincipal:
             return None
 
         senha_crip = self.__fernet.encrypt( dados_gerente['senha'].encode())
-        gerente = Gerente(dados_gerente["nome"], senha_crip)
+        gerente = Gerente(dados_gerente["nome"], dados_gerente["usuario"], senha_crip)
         self.__DAOgerente.add(gerente)
         return True
 
@@ -98,7 +100,7 @@ class ControladorPrincipal:
 
     def abrir_menu(self):
         if self.__privilegio:
-            self.__controlador_gerente.abre_tela()  # TelaMenu
+            self.__controlador_gerente.abre_tela()  # TelaGerente
         else:
             self.__controlador_funcionario.abre_tela()
 
@@ -119,6 +121,7 @@ class ControladorPrincipal:
                 #self.__tela_principal.error()
             else:                    
                 self.__tela_principal.msg("USUARIO ENTROU")
+                self.__tela_principal.close_login()
                 lista_opçoes[opçao]()
                 
             self.__tela_principal.close_login()

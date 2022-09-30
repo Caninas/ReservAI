@@ -25,6 +25,7 @@ class TelaPrincipal():
             [sg.Text('Bem vindo ao sistema ReservAI, porfavor gerente, faca seu cadastro!')],
             [sg.Text('Cadastro Gerente')],
             [sg.Text('Nome'), sg.Input(key="nome")],
+            [sg.Text('Usuário'), sg.Input(key="usuario")],
             [sg.Text('Senha'), sg.Input(key="senha")],
             [sg.Button('Cadastrar', key="cadastrar")],
             [sg.Button('Sair', key=0)]
@@ -37,7 +38,7 @@ class TelaPrincipal():
         window.close()
         if event == "Sair" or event == sg.WIN_CLOSED:
             return None
-        return {"nome": values['nome'], "senha": values['senha']}
+        return {"nome": values['nome'], "usuario": values['usuario'], "senha": values['senha']}
 
 
     def opcoes_login(self):

@@ -2,14 +2,12 @@ import pickle
 from Entidade.Gerente import Gerente
 
 
-# from cryptography.fernet import Fernet
-
 class DAOgerente():
-    def __init__(self, dataSource):
+    def __init__(self, dataSource, cript):
         self.__main = dataSource
         self.__cache = []
 
-        self.abrir("gerente")
+        #self.abrir("gerente")
 
     def abrir(self, tipo):
         self.__cache = self.__main.abrir(tipo)
@@ -20,7 +18,7 @@ class DAOgerente():
     def getGerente(self, usuario):
         objGerente = 0
         for gerente in self.__cache:
-            if gerente.nome == usuario:
+            if gerente.usuario == usuario:
                 objGerente = gerente
 
         return objGerente

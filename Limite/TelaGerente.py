@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 
 # tela inicial do sistema
 
-class TelaMenu():
+class TelaGerente():
 
     def __init__(self):
         self.__windows_menu = None
@@ -27,7 +27,7 @@ class TelaMenu():
 
     def close_menu(self):
         self.__windows_menu.Close()
-        self.login()
+        #self.login()
 
     def msg(self, msg):
         sg.Popup(msg)
