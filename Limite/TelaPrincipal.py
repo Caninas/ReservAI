@@ -6,7 +6,7 @@ class TelaPrincipal():
 
     def __init__(self):
         self.__window = None
-        self.cadastro_gerente()
+        #self.cadastro_gerente()
         self.login()
 
     def login(self):
@@ -18,7 +18,38 @@ class TelaPrincipal():
             [sg.Button('Entrar', key="entrar")],
             [sg.Button('Sair', key=0)]
                 ]
-        self.__window_login = sg.Window('Cadastro Gerente').Layout(layout)
+        self.__window_login = sg.Window('Login no sistema').Layout(layout)
+
+    # def cadastro_gerente(self):
+    #     sg.ChangeLookAndFeel('Reddit')
+    #     layout = [
+    #         [sg.Text('Cadastro Gerente')],
+    #         [sg.Text('Nome'), sg.Input(key="Nome")],
+    #         [sg.Text('Senha'), sg.Input(key="senha")],
+    #         [sg.Button('Cadastrar', key="cadastrar")],
+    #         [sg.Button('Sair', key=0)]
+    #             ]
+    #     self.__window_cadastro_gerente = sg.Window('Cadastro Gerente').Layout(layout)
+
+    def cadastro_gerente_primeira_vez(self):
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text('Bem vindo ao sistema ReservAI, porfavor gerente, faca seu cadastro!')],
+            [sg.Text('Cadastro Gerente')],
+            [sg.Text('Nome'), sg.Input(key="nome")],
+            [sg.Text('Senha'), sg.Input(key="senha")],
+            [sg.Button('Cadastrar', key="cadastrar")],
+            [sg.Button('Sair', key=0)]
+        ]
+
+        window = sg.Window('Cadastro de Funcionário', layout, element_justification='center')
+
+        event, values = window.read()
+
+        window.close()
+        if event == "Sair" or event == sg.WIN_CLOSED:
+            return None
+        return {"nome": values['nome'], "senha": values['senha']}
 
 
     def opcoes_login(self):

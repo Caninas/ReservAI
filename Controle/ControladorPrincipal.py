@@ -4,6 +4,7 @@
 
 from cryptography.fernet import Fernet
 from Limite.TelaPrincipal import TelaPrincipal
+from Entidade.Gerente import Gerente
 
 # from Controle.ControladorGerente import ControladorGerente
 # from Controle.ControladorFuncionario import ControladorFuncionario
@@ -28,14 +29,37 @@ class ControladorPrincipal:
         self.__tela_principal = TelaPrincipal()
 
     def iniciar_sistema(self):
-        #if exite_gerente:
+        if len(self.__DAOgerente.get_all()) > 0:
             self.abre_login()
-        #else:
-          #  self.abre_cadastro_gerente()
+        else:
+            if self.abre_cadastro_gerente_primeira_vez():
+                self.abre_login()
 
     def encerrar_sistema(self, *args):
         exit(0)
 
+    def abre_cadastro_gerente_primeira_vez(self):
+
+        dados_gerente = self.__tela_principal.cadastro_gerente_primeira_vez()
+
+        if dados_gerente == None:
+            return None
+
+        senha_crip = self.__fernet.encrypt( dados_gerente['senha'].encode())
+        gerente = Gerente(dados_gerente["nome"], senha_crip)
+        self.__DAOgerente.add(gerente)
+        return True
+
+
+    def abre_cadastro_gerente(self):
+        lista_opçoes = {"cadastrar": "a", 0: self.encerrar_sistema}
+
+        while True:
+            opçao = self.__tela_principal.cadastro_gerente()
+            print(opçao)
+            # validar, criar gerente e abrir login normal
+            funçao = lista_opçoes[opçao]()
+            self.__tela_principal.cadastro_gerente()
 
     # def tela_funcionario(self):
     #     self.__controlador_funcionario.abre_tela()

@@ -14,6 +14,9 @@ class DAOgerente():
     def abrir(self, tipo):
         self.__cache = self.__main.abrir(tipo)
 
+    def get_all(self):
+        return self.__cache
+
     def getGerente(self, usuario):
         objGerente = 0
         for gerente in self.__cache:
