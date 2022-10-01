@@ -7,7 +7,7 @@ class DAOgerente():
         self.__main = dataSource
         self.__cache = []
 
-        #self.abrir("gerente")
+        self.abrir("gerente")
 
     def abrir(self, tipo):
         self.__cache = self.__main.abrir(tipo)
