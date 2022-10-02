@@ -42,6 +42,7 @@ class TelaPrincipal():
 
 
     def opcoes_login(self):
+        self.login()
         button, values = self.__window_login.Read()
         if button is None:
             button = 0

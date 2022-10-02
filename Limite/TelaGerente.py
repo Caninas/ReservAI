@@ -10,10 +10,9 @@ class TelaGerente():
     def menu(self):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
-            [sg.Text('MENU'), sg.Button(key="DESLOGAR")],
+            [sg.Text('MENU'), sg.Button("Sair", key="deslogar")],
             [sg.Button('Cadastrar Funcionário', key="cadastrar_func")],
             [sg.Text('MAPA')],
-            [sg.Button('Sair', key=0)]
                 ]
         self.__windows_menu = sg.Window('MENU').Layout(layout)
 
@@ -56,15 +55,15 @@ class TelaGerente():
                 
             return button, values
 
-    def close_cadastro_func(self):
-        self.__windows_cadastro_func.Close()
-
     def opçoes_menu(self):
         self.menu()
         button, values = self.__windows_menu.Read()
         if button is None:
             button = 0
         return button, values
+
+    def close_cadastro_func(self):
+        self.__windows_cadastro_func.Close()
 
     def close_menu(self):
         self.__windows_menu.Close()

@@ -9,14 +9,14 @@ class TelaFuncionario():
     def menu(self):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
-            [sg.Text('MENU'), sg.Button(key="DESLOGAR")],
+            [sg.Text('MENU'), sg.Button("Sair", key="deslogar")],
             [sg.Button('Cadastrar Funcionário', key="cadastrar_func")],
             [sg.Text('MAPA')],
-            [sg.Button('Sair', key=0)]
                 ]
         self.__windows_menu = sg.Window('MENU').Layout(layout)
 
     def opçoes_menu(self):
+        self.menu()
         button, values = self.__windows_menu.Read()
         if button is None:
             button = 0

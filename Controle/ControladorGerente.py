@@ -44,12 +44,16 @@ class ControladorGerente:
 
         while True:
             opçao, valores = self.__tela_gerente.opçoes_menu()
-            print(opçao, valores, "passou direto")
+            
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_gerente.close_menu()
                 self.__controlador_sistema.encerrar_sistema()
                 break
             
             self.__tela_gerente.close_menu()
+
             print(opçao, valores)
+            if opçao == "deslogar":
+                break
+
             lista_opçoes[opçao]()

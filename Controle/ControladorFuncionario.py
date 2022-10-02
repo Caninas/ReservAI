@@ -41,8 +41,12 @@ class ControladorFuncionario:
                 self.__controlador_sistema.encerrar_sistema()
                 break
             
+            self.__tela_funcionario.close_menu()
+            
             print(opçao, valores)
+            if opçao == "deslogar":
+                break
+
             lista_opçoes[opçao]()
                 
-            self.__tela_funcionario.close_menu()
 
