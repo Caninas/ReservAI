@@ -7,11 +7,11 @@ from Limite.TelaPrincipal import TelaPrincipal
 from Entidade.Gerente import Gerente
 
 from Controle.ControladorGerente import ControladorGerente
-# from Controle.ControladorFuncionario import ControladorFuncionario
+from Controle.ControladorFuncionario import ControladorFuncionario
 # from Controle.ControladorHospede import ControladorHospede
 
 from Persistencia.DAOgerente import DAOgerente
-#from Persistencia.DAOfuncionario.py import DAOfuncionario
+from Persistencia.DAOfuncionario import DAOfuncionario
 from Persistencia.DataSource import DataSource
 
 class ControladorPrincipal:
@@ -23,12 +23,16 @@ class ControladorPrincipal:
 
         self.__dataSource = DataSource()
         self.__DAOgerente = DAOgerente(self.__dataSource, self.__fernet)
-
-        self.__controlador_gerente = ControladorGerente(self, self.__DAOgerente)
-        # self.__controlador_funcionario = ControladorFuncionario(self)
+        self.__DAOfuncionario = DAOfuncionario(self.__dataSource, self.__fernet)
+        
+        self.__controlador_gerente = ControladorGerente(self, self.__DAOgerente, self.__DAOfuncionario)
+        self.__controlador_funcionario = ControladorFuncionario(self, self.__DAOfuncionario, self.__fernet)
         # self.__controlador_hospede = ControladorHospede(self)
         self.__tela_principal = TelaPrincipal()
 
+    @property
+    def controlador_funcionario(self):
+        return self.__controlador_funcionario
 
     def iniciar_sistema(self):
         if len(self.__DAOgerente.get_all()) > 0:
@@ -73,21 +77,24 @@ class ControladorPrincipal:
     def validar_usuario(self, valores):
         print("validando usuario")
         gerente = self.__DAOgerente.getGerente(valores["usuario"])
-        funcionario = 0#self.__DAOfuncionario.getFuncionario(valores["usuario"])
+        funcionario = self.__DAOfuncionario.getFuncionario(valores["usuario"])
         
         if gerente != 0:
             self.__usuario_logado = gerente
             self.__privilegio = 1
+            senha = gerente.senha
             print("usuario:", gerente.usuario)
         else:
             if funcionario != 0:
                 self.__usuario_logado = funcionario
                 self.__privilegio = 0
+                senha = funcionario.senha
+                print("usuario:", funcionario.usuario)
             else:
                 print("nao achou usuario")
                 return 0
 
-        return self.validar_senha(gerente.senha, valores["senha"])
+        return self.validar_senha(senha, valores["senha"])
         
     def validar_senha(self, senha_og, senha_input):
         if self.__fernet.decrypt(senha_og).decode() == senha_input:
@@ -124,5 +131,4 @@ class ControladorPrincipal:
                 self.__tela_principal.close_login()
                 lista_opçoes[opçao]()
                 
-            self.__tela_principal.close_login()
 
