@@ -5,9 +5,11 @@ import PySimpleGUI as sg
 
 
 class ControladorGerente:
-    def __init__(self, controlador_sistema, dao_gerente, f):
+    def __init__(self, controlador_sistema, controlador_hospede, dao_gerente, f):
         self.__gerente_dao = dao_gerente
         self.__controlador_sistema = controlador_sistema
+        self.__controlador_hospede = controlador_hospede
+
         self.__funcionarios_dao = f
         self.__tela_gerente = TelaGerente()
 
@@ -40,7 +42,7 @@ class ControladorGerente:
         self.__tela_gerente.close_cadastro_func()
 
     def abre_tela(self):
-        lista_opçoes = {"cadastrar_func": self.cadastrar_funcionario}
+        lista_opçoes = {"cadastrar_func": self.cadastrar_funcionario, "menu_hospede": self.__controlador_hospede.abre_tela}
 
         while True:
             opçao, valores = self.__tela_gerente.opçoes_menu()

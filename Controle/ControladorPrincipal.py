@@ -3,15 +3,18 @@
 import PySimpleGUI as sg
 
 from cryptography.fernet import Fernet
+
 from Limite.TelaPrincipal import TelaPrincipal
+
 from Entidade.Gerente import Gerente
 
 from Controle.ControladorGerente import ControladorGerente
 from Controle.ControladorFuncionario import ControladorFuncionario
-# from Controle.ControladorHospede import ControladorHospede
+from Controle.ControladorHospede import ControladorHospede
 
 from Persistencia.DAOgerente import DAOgerente
 from Persistencia.DAOfuncionario import DAOfuncionario
+from Persistencia.DAOhospede import DAOhospede
 from Persistencia.DataSource import DataSource
 
 class ControladorPrincipal:
@@ -23,11 +26,13 @@ class ControladorPrincipal:
 
         self.__dataSource = DataSource()
         self.__DAOgerente = DAOgerente(self.__dataSource, self.__fernet)
+        self.__DAOhospede = DAOhospede(self.__dataSource)
         self.__DAOfuncionario = DAOfuncionario(self.__dataSource, self.__fernet)
         
-        self.__controlador_gerente = ControladorGerente(self, self.__DAOgerente, self.__DAOfuncionario)
-        self.__controlador_funcionario = ControladorFuncionario(self, self.__DAOfuncionario, self.__fernet)
-        # self.__controlador_hospede = ControladorHospede(self)
+        self.__controlador_hospede = ControladorHospede(self, self.__DAOhospede)
+        self.__controlador_gerente = ControladorGerente(self, self.__controlador_hospede, self.__DAOgerente, self.__DAOfuncionario)
+        self.__controlador_funcionario = ControladorFuncionario(self, self.__controlador_hospede, self.__DAOfuncionario, self.__fernet)
+        
         self.__tela_principal = TelaPrincipal()
 
     @property

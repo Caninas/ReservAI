@@ -6,11 +6,12 @@ import PySimpleGUI as sg
 
 
 class ControladorFuncionario:
-    def __init__(self, controlador_sistema, dao_funcionario, cript):
+    def __init__(self, controlador_sistema, controlador_hospede, dao_funcionario, cript):
         self.__funcionario_dao = dao_funcionario
         self.__controlador_sistema = controlador_sistema
         self.__fernet = cript
         
+        self.__controlador_hospede = controlador_hospede
         self.__tela_funcionario = TelaFuncionario()
 
     @property
@@ -31,7 +32,7 @@ class ControladorFuncionario:
 
 
     def abre_tela(self):
-        lista_opçoes = {}
+        lista_opçoes = {"menu_hospede": self.__controlador_hospede.abre_tela}
 
         while True:
             opçao, valores = self.__tela_funcionario.opçoes_menu()

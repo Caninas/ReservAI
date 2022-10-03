@@ -10,7 +10,7 @@ class TelaFuncionario():
         sg.ChangeLookAndFeel('Reddit')
         layout = [
             [sg.Text('MENU'), sg.Button("Sair", key="deslogar")],
-            [sg.Button('Cadastrar Funcionário', key="cadastrar_func")],
+            [sg.Button('Menu Hóspede', key="menu_hospede")],
             [sg.Text('MAPA')],
                 ]
         self.__windows_menu = sg.Window('MENU').Layout(layout)
