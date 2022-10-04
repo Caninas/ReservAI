@@ -23,6 +23,17 @@ class DAOfuncionario():
 
         return objFuncionarios
 
+    def getFuncionarioCPF(self, cpf):
+        objFuncionarios = 0
+        for funcionario in self.__cache:
+            if funcionario.cpf == int(cpf):
+                objFuncionarios = funcionario
+
+        return objFuncionarios
+
+    def atualizar(self):
+        self.__main.guardar(["funcionarios", self.__cache])
+
     def add(self, objeto: Funcionario):
         if objeto != None and isinstance(objeto, Funcionario):
             self.__cache.append(objeto)  # guarda no cache local
