@@ -9,11 +9,11 @@ class TelaFuncionario():
     def menu(self):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
-            [sg.Text('MENU'), sg.Button("Sair", key="deslogar")],
+            [sg.Text('MENU', font=("Arial", 20)), sg.Button("Sair", key="deslogar", pad=((640, 0),(10,0)))],
             [sg.Button('Menu Hóspede', key="menu_hospede")],
-            [sg.Text('MAPA')],
+            [sg.Text('MAPA', font=("Arial", 15), pad=((0, 0),(180,0)))],
                 ]
-        self.__windows_menu = sg.Window('MENU').Layout(layout)
+        self.__windows_menu = sg.Window('MENU', size=(800, 450), element_justification="c").Layout(layout)
 
     def opçoes_menu(self):
         self.menu()

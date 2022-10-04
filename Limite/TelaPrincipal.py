@@ -9,15 +9,19 @@ class TelaPrincipal():
         self.login()
 
     def login(self):
-        sg.ChangeLookAndFeel('Reddit')
+        sg.ChangeLookAndFeel('Reddit') 
         layout = [
-            [sg.Text('LOGIN')],
+            [
+                sg.Frame("", [
+            [sg.Text('LOGIN', font=("Arial", 15), justification="c")],
             [sg.Text('Usuário'), sg.Input(key="usuario")],
-            [sg.Text('Senha'), sg.Input(key="senha")],
+            [sg.Text('Senha'), sg.Input(key="senha", password_char="*")],
             [sg.Button('Entrar', key="entrar")],
             [sg.Button('Sair', key=0)]
+                            ], border_width=0, pad=((0,0),(130,0)), element_justification="c")
+            ]
                 ]
-        self.__window_login = sg.Window('Login no sistema').Layout(layout)
+        self.__window_login = sg.Window('Login no sistema', size=(800, 450), element_justification="c").Layout(layout)
 
     def cadastro_gerente_primeira_vez(self):
         sg.ChangeLookAndFeel('Reddit')
@@ -31,7 +35,7 @@ class TelaPrincipal():
             [sg.Button('Sair', key=0)]
         ]
 
-        window = sg.Window('Cadastro de Funcionário', layout, element_justification='center')
+        window = sg.Window('Cadastro de Funcionário', layout, size=(800, 450), element_justification="c")
 
         event, values = window.read()
 

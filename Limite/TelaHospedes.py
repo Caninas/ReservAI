@@ -8,7 +8,7 @@ class TelaHospedes():
 
     def menu(self):
         layout = [
-            [sg.Text('Menu Hóspede')],
+            [sg.Text('Menu Hóspede', font=("Arial", 20))], # trocar para imagem photoshop
 
             [sg.Button('Cadastrar', key="cadastrar_hospede")],
             [sg.Button('Alterar Informações', key="alterar_hospede")],
@@ -16,11 +16,11 @@ class TelaHospedes():
 
             [sg.Button('Voltar', key=0)]
         ]
-        self.__window_menu = sg.Window('Menu Hóspede').Layout(layout)
+        self.__window_menu = sg.Window('Menu Hóspede', element_justification="c").Layout(layout)
 
     def cadastro(self):
         layout = [
-            [sg.Text('Cadastro Hóspede')],
+            [sg.Text('Cadastro Hóspede', font=("Arial", 15))],
             [sg.Text('Nome'), sg.Input(key="nome")],
             [sg.Text('CPF'), sg.Input(key="cpf")],
             [sg.Text('Data de Nascimento'), sg.Input(key="data_nascimento")],
@@ -41,7 +41,7 @@ class TelaHospedes():
 
     def alterar(self, hospede):
         layout = [
-            [sg.Text('Cadastro Hóspede')],
+            [sg.Text('Alterar Hóspede', font=("Arial", 15))],
             [sg.Text('Nome'), sg.Input(hospede.nome, key="nome")],
             [sg.Text('CPF'), sg.Input(hospede.cpf, key="cpf")],
             [sg.Text('Data de Nascimento'), sg.Input(hospede.data_nascimento, key="data_nascimento")],
@@ -57,13 +57,14 @@ class TelaHospedes():
             [sg.Text('Pais'), sg.Input(hospede.end_pais, key="pais")],
             [sg.Button('Alterar', key="alterar")],
             [sg.Button('Cancelar', key=0)]
-        ]
-        self.__window_alterar_hospede = sg.Window('Cadastro Hóspede').Layout(layout)
+            ]
+
+        self.__window_alterar_hospede = sg.Window('Alterar Hóspede').Layout(layout)
         
     def excluir(self, nome_hospede=None):
         confirmar = [
-            [sg.Text('Tem certeza que deseja excluir:')],
-            [sg.Text(nome_hospede)],
+            [sg.Text('Tem certeza que deseja excluir:', font=("Arial", 15))],
+            [sg.Text(nome_hospede, font=("Arial", 15), justification="c")],
 
             [sg.Button('Sim', key="sim")],
             [sg.Button('Cancelar', key=0)]
@@ -73,7 +74,7 @@ class TelaHospedes():
 
     def busca(self):
         layout = [
-            [sg.Text('Buscar Hóspede')],
+            [sg.Text('Buscar Hóspede', font=("Arial", 15))],
             [sg.Text('CPF'), sg.Input(key="cpf")],
 
             [sg.Button('Buscar', key="buscar")],

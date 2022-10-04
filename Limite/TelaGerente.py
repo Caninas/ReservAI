@@ -10,16 +10,15 @@ class TelaGerente():
     def menu(self):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
-            [sg.Text('MENU'), sg.Button("Sair", key="deslogar")],
-            [sg.Button('Menu Funcionário', key="menu_funcionario")],
-            [sg.Button('Menu Hóspede', key="menu_hospede")],
-            [sg.Text('MAPA')],
+            [sg.Text('MENU', font=("Arial", 20)), sg.Button("Sair", key="deslogar", pad=((640, 0),(10,0)))],
+            [sg.Button('Menu Funcionário', key="menu_funcionario"), sg.Button('Menu Hóspede', key="menu_hospede")],
+            [sg.Text('MAPA', font=("Arial", 15), pad=((0, 0),(180,0)))],
                 ]
-        self.__windows_menu = sg.Window('MENU').Layout(layout)
+        self.__windows_menu = sg.Window('MENU', size=(800, 450), element_justification="c").Layout(layout)
 
     def menu_funcionario(self):
         layout = [
-            [sg.Text('Menu Funcionário')],
+            [sg.Text('Menu Funcionário', font=("Arial", 20))],
 
             [sg.Button('Cadastrar', key="cadastrar_funcionario")],
             [sg.Button('Alterar Informações', key="alterar_funcionario")],
@@ -27,11 +26,11 @@ class TelaGerente():
 
             [sg.Button('Voltar', key=0)]
         ]
-        self.__window_menu_funcionario = sg.Window('Menu Funcionário').Layout(layout)
+        self.__window_menu_funcionario = sg.Window('Menu Funcionário',  element_justification="c").Layout(layout)
     
     def menu_busca_funcionario(self):
         layout = [
-            [sg.Text('Buscar Funcionário')],
+            [sg.Text('Buscar Funcionário', font=("Arial", 15))],
             [sg.Text('CPF'), sg.Input(key="cpf")],
 
             [sg.Button('Buscar', key="buscar")],
@@ -44,7 +43,7 @@ class TelaGerente():
         sg.ChangeLookAndFeel('Reddit')
 
         layout = [  
-            [sg.Text('Cadastro Funcionário')],
+            [sg.Text('Cadastro Funcionário', font=("Arial", 15))],
             [sg.Text('Nome'), sg.Input(key="nome")],
             [sg.Text('Usuário'), sg.Input(key="usuario")],
             [sg.Text('Senha'), sg.Input(key="senha")],
@@ -53,14 +52,14 @@ class TelaGerente():
             [sg.Text('Telefone'), sg.Input(key="telefone")],
             [sg.Text('E-mail'), sg.Input(key="email")],
             [sg.Button('Cadastrar', key="cadastrar")],
-            [sg.Button('Sair', key=0)]
+            [sg.Button('Cancelar', key=0)]
         ]
 
         self.__window_cadastro_func = sg.Window('Cadastro Funcionário').Layout(layout)
 
     def menu_alterar_funcionario(self, funcionario, senha):
         layout = [  
-            [sg.Text('Alterar Funcionário')],
+            [sg.Text('Alterar Funcionário', font=("Arial", 15))],
             [sg.Text('Nome'), sg.Text(funcionario.nome)],
             [sg.Text('Usuário'), sg.Input(funcionario.usuario, key="usuario")],
             [sg.Text('Senha'), sg.Input(senha, key="senha")],
@@ -71,12 +70,12 @@ class TelaGerente():
             [sg.Button('Alterar', key="alterar")],
             [sg.Button('Sair', key=0)]
         ]
-        self.__window_alterar_funcionario = sg.Window('Cadastro Hóspede').Layout(layout)
+        self.__window_alterar_funcionario = sg.Window('Alterar Funcionário').Layout(layout)
 
     def menu_excluir_funcionario(self, nome_funcionario=None):
         confirmar = [
-            [sg.Text('Tem certeza que deseja excluir:')],
-            [sg.Text(nome_funcionario)],
+            [sg.Text('Tem certeza que deseja excluir:', font=("Arial", 15))],
+            [sg.Text(nome_funcionario, font=("Arial", 15))],
 
             [sg.Button('Sim', key="sim")],
             [sg.Button('Cancelar', key=0)]
