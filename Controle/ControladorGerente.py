@@ -42,18 +42,27 @@ class ControladorGerente:
             lista_opçoes[opçao]()
 
     def cadastrar_funcionario(self):
-        opçao, valores = self.__tela_gerente.cadastrar_funcionario()
-        
-        if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
-            self.__tela_gerente.close_cadastrar_funcionario()
-            return
-        
-        self.__controlador_sistema.controlador_funcionario.cadastrar(valores)
+        while True:
+            opçao, valores = self.__tela_gerente.cadastrar_funcionario()
+                
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
+                self.__tela_gerente.close_cadastrar_funcionario()
+                return
+                
+            if self.buscar_funcionario(valores["cpf"]) != 0:
+                self.__tela_gerente.msg("cpf já existente")
+                self.__tela_gerente.close_cadastrar_funcionario()
+            elif self.__funcionarios_dao.getFuncionario(valores["usuario"]) != 0 or self.__gerente_dao.getGerente(valores["usuario"]) != 0:
+                self.__tela_gerente.msg("usuário já existente")
+                self.__tela_gerente.close_cadastrar_funcionario()
+            
+            else:
+                self.__controlador_sistema.controlador_funcionario.cadastrar(valores)
 
-        self.__tela_gerente.msg("Funcionário Cadastrado")
-        print(self.__funcionarios_dao.get_all())
-        
-        self.__tela_gerente.close_cadastrar_funcionario()
+                self.__tela_gerente.msg("Funcionário Cadastrado")
+                print(self.__funcionarios_dao.get_all())
+                    
+                self.__tela_gerente.close_cadastrar_funcionario()
 
     def alterar_funcionario(self):
         opçao, valores = self.__tela_gerente.buscar_funcionario()
