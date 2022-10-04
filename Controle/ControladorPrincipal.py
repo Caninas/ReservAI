@@ -61,24 +61,6 @@ class ControladorPrincipal:
         self.__DAOgerente.add(gerente)
         return True
 
-
-    def abre_cadastro_gerente(self):
-        lista_opçoes = {"cadastrar": "a", 0: self.encerrar_sistema}
-
-        while True:
-            opçao = self.__tela_principal.cadastro_gerente()
-            print(opçao)
-            # validar, criar gerente e abrir login normal
-            funçao = lista_opçoes[opçao]()
-            self.__tela_principal.cadastro_gerente()
-
-    # def tela_funcionario(self):
-    #     self.__controlador_funcionario.abre_tela()
-
-    # def tela_hospede(self):
-    #     self.__controlador_hospede.abre_tela()
-
-
     def validar_usuario(self, valores):
         print("validando usuario")
         gerente = self.__DAOgerente.getGerente(valores["usuario"])
@@ -109,7 +91,6 @@ class ControladorPrincipal:
             print("senha errada")
             return 0
 
-
     def abrir_menu(self):
         if self.__privilegio:
             self.__controlador_gerente.abre_tela()  # TelaGerente
@@ -127,11 +108,8 @@ class ControladorPrincipal:
                 self.encerrar_sistema()
                 break
             
-            print(opçao, valores)
             if self.validar_usuario(valores) == 0:
                 self.__tela_principal.msg("ERROR: USUARIO OU SENHA ERRADOS")
             else:
                 self.__tela_principal.close_login()
                 lista_opçoes[opçao]()
-                
-

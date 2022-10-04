@@ -1,4 +1,3 @@
-
 class Funcionario:
     def __init__(self, nome: str, usuario: str, senha: str, cpf: str, data_nascimento: str, telefone: str, email: str):
         self.__nome = nome.strip()

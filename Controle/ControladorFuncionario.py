@@ -10,7 +10,7 @@ class ControladorFuncionario:
         self.__funcionario_dao = dao_funcionario
         self.__controlador_sistema = controlador_sistema
         self.__fernet = cript
-        
+
         self.__controlador_hospede = controlador_hospede
         self.__tela_funcionario = TelaFuncionario()
 
@@ -23,13 +23,13 @@ class ControladorFuncionario:
             if funcionario.nome == nome:
                 return True
         return False
-        
+
     def cadastrar(self, valores):
         senha = self.__fernet.encrypt(valores['senha'].encode())
-        funcionario = Funcionario(valores["nome"], valores["usuario"], senha, valores["cpf"], valores["data_nascimento"], valores["telefone"], valores["email"])
+        funcionario = Funcionario(valores["nome"], valores["usuario"], senha, valores["cpf"],
+                                  valores["data_nascimento"], valores["telefone"], valores["email"])
         self.__funcionario_dao.add(funcionario)
         print("adicionado")
-
 
     def abre_tela(self):
         lista_opçoes = {"menu_hospede": self.__controlador_hospede.abre_tela}
@@ -41,13 +41,10 @@ class ControladorFuncionario:
                 self.__tela_funcionario.close_menu()
                 self.__controlador_sistema.encerrar_sistema()
                 break
-            
+
             self.__tela_funcionario.close_menu()
-            
-            print(opçao, valores)
+
             if opçao == "deslogar":
                 break
 
             lista_opçoes[opçao]()
-                
-

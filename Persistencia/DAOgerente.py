@@ -1,4 +1,3 @@
-import pickle
 from Entidade.Gerente import Gerente
 
 

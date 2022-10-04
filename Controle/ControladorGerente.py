@@ -28,7 +28,8 @@ class ControladorGerente:
         return self.__funcionarios_dao.getFuncionarioCPF(cpf)
 
     def menu_funcionario(self):
-        lista_opçoes = {"cadastrar_funcionario": self.cadastrar_funcionario, "alterar_funcionario": self.alterar_funcionario, "excluir_funcionario": self.excluir_funcionario}
+        lista_opçoes = {"cadastrar_funcionario": self.cadastrar_funcionario,
+                        "alterar_funcionario": self.alterar_funcionario, "excluir_funcionario": self.excluir_funcionario}
 
         while True:
             opçao, valores = self.__tela_gerente.opçoes_funcionario()
@@ -36,7 +37,7 @@ class ControladorGerente:
             if opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_gerente.close_opçoes_funcionario()
                 return
-            
+
             self.__tela_gerente.close_opçoes_funcionario()
 
             lista_opçoes[opçao]()
@@ -44,29 +45,30 @@ class ControladorGerente:
     def cadastrar_funcionario(self):
         while True:
             opçao, valores = self.__tela_gerente.cadastrar_funcionario()
-                
+
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_gerente.close_cadastrar_funcionario()
                 return
-                
+
             if self.buscar_funcionario(valores["cpf"]) != 0:
                 self.__tela_gerente.msg("cpf já existente")
                 self.__tela_gerente.close_cadastrar_funcionario()
             elif self.__funcionarios_dao.getFuncionario(valores["usuario"]) != 0 or self.__gerente_dao.getGerente(valores["usuario"]) != 0:
                 self.__tela_gerente.msg("usuário já existente")
                 self.__tela_gerente.close_cadastrar_funcionario()
-            
+
             else:
-                self.__controlador_sistema.controlador_funcionario.cadastrar(valores)
+                self.__controlador_sistema.controlador_funcionario.cadastrar(
+                    valores)
 
                 self.__tela_gerente.msg("Funcionário Cadastrado")
                 print(self.__funcionarios_dao.get_all())
-                    
+
                 self.__tela_gerente.close_cadastrar_funcionario()
 
     def alterar_funcionario(self):
         opçao, valores = self.__tela_gerente.buscar_funcionario()
-        
+
         if opçao == 0 or opçao == sg.WIN_CLOSED:
             self.__tela_gerente.close_busca_funcionarios()
             return
@@ -77,16 +79,17 @@ class ControladorGerente:
         if funcionario == 0:
             self.__tela_gerente.msg("Funcionário não encontrado!")
             return
-        
+
         senha = self.__fernet.decrypt(funcionario.senha).decode()
-        opçao, valores = self.__tela_gerente.alterar_funcionario(funcionario, senha)
+        opçao, valores = self.__tela_gerente.alterar_funcionario(
+            funcionario, senha)
 
         if opçao == 0 or opçao == sg.WIN_CLOSED:
             self.__tela_gerente.close_alterar_funcionario()
             return
 
         valores["senha"] = self.__fernet.encrypt(valores["senha"].encode())
-        
+
         funcionario.atualizar(valores)
         self.__funcionarios_dao.atualizar()
 
@@ -95,7 +98,7 @@ class ControladorGerente:
 
     def excluir_funcionario(self):
         opçao, valores = self.__tela_gerente.buscar_funcionario()
-        
+
         if opçao == 0 or opçao == sg.WIN_CLOSED:
             self.__tela_gerente.close_busca_funcionarios()
             return
@@ -107,30 +110,31 @@ class ControladorGerente:
             self.__tela_gerente.msg("Funcionário não encontrado!")
             return
 
-        opçao, valores = self.__tela_gerente.excluir_funcionario(funcionario.nome)
+        opçao, valores = self.__tela_gerente.excluir_funcionario(
+            funcionario.nome)
 
         if opçao == 0 or opçao == sg.WIN_CLOSED:
             self.__tela_gerente.close_excluir_funcionario()
             return
-        
+
         self.__funcionarios_dao.remove(funcionario)
         self.__tela_gerente.msg("Funcionário excluído com sucesso")
         self.__tela_gerente.close_excluir_funcionario()
 
     def abre_tela(self):
-        lista_opçoes = {"menu_funcionario": self.menu_funcionario, "menu_hospede": self.__controlador_hospede.abre_tela}
+        lista_opçoes = {"menu_funcionario": self.menu_funcionario,
+                        "menu_hospede": self.__controlador_hospede.abre_tela}
 
         while True:
             opçao, valores = self.__tela_gerente.opçoes_menu()
-            
+
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_gerente.close_menu()
                 self.__controlador_sistema.encerrar_sistema()
                 break
-            
+
             self.__tela_gerente.close_menu()
 
-            print(opçao, valores)
             if opçao == "deslogar":
                 break
 

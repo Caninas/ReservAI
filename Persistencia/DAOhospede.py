@@ -1,4 +1,3 @@
-import pickle
 from Entidade.Hospede import Hospede
 
 

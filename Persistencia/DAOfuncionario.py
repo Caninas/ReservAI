@@ -1,4 +1,3 @@
-import pickle
 from Entidade.Funcionario import Funcionario
 
 
