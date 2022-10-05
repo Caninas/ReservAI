@@ -110,6 +110,7 @@ class ControladorPrincipal:
             
             if self.validar_usuario(valores) == 0:
                 self.__tela_principal.msg("ERROR: USUARIO OU SENHA ERRADOS")
+                self.__tela_principal.close_login()
             else:
                 self.__tela_principal.close_login()
                 lista_opçoes[opçao]()
