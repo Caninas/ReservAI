@@ -23,6 +23,9 @@ class TelaPrincipal():
                 ]
         self.__window_login = sg.Window('Login no sistema', size=(800, 450), element_justification="c").Layout(layout)
 
+    def mostra_mensagem(self, msg):
+        sg.Popup(msg)
+
     def cadastro_gerente_primeira_vez(self):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
@@ -40,7 +43,7 @@ class TelaPrincipal():
         event, values = window.read()
 
         window.close()
-        if event == "Sair" or event == sg.WIN_CLOSED:
+        if event == 0 or event == sg.WIN_CLOSED:
             return None
         return {"nome": values['nome'], "usuario": values['usuario'], "senha": values['senha']}
 

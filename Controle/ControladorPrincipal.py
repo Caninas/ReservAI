@@ -47,12 +47,25 @@ class ControladorPrincipal:
                 self.abre_login()
 
     def encerrar_sistema(self, *args):
+
         exit(0)
+
+    def valida_dados(self, dados):
+        for value in dados.values():
+            if not value or len(value.replace(" ", "")) == 0:
+                return False
+        return True
 
     def abre_cadastro_gerente_primeira_vez(self):
 
-        dados_gerente = self.__tela_principal.cadastro_gerente_primeira_vez()
-
+        while True:
+            dados_gerente = self.__tela_principal.cadastro_gerente_primeira_vez()
+            if not dados_gerente:
+                self.encerrar_sistema()
+            if self.valida_dados(dados_gerente):
+                break
+            else:
+                self.__tela_principal.mostra_mensagem("Nenhum dado pode estar vazio!!")
         if dados_gerente == None:
             return None
 
