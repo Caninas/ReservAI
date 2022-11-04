@@ -39,6 +39,8 @@ class ControladorHospede:
         self.__tela_hospede.msg("Hóspede Cadastrado")
         self.__tela_hospede.close_cadastro()
 
+        return hospede
+
     def alterar_hospede(self):
         opçao, valores = self.__tela_hospede.buscar_hospede()
 

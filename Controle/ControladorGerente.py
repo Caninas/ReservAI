@@ -5,10 +5,11 @@ import PySimpleGUI as sg
 
 
 class ControladorGerente:
-    def __init__(self, controlador_sistema, controlador_hospede, dao_gerente, dao_funcionario, cript):
+    def __init__(self, controlador_sistema, controlador_hospede, controlador_reserva, dao_gerente, dao_funcionario, cript):
         self.__gerente_dao = dao_gerente
         self.__controlador_sistema = controlador_sistema
         self.__controlador_hospede = controlador_hospede
+        self.__controlador_reserva = controlador_reserva
         self.__fernet = cript
 
         self.__funcionarios_dao = dao_funcionario
@@ -52,19 +53,17 @@ class ControladorGerente:
 
             if self.buscar_funcionario(valores["cpf"]) != 0:
                 self.__tela_gerente.msg("cpf já existente")
-                self.__tela_gerente.close_cadastrar_funcionario()
             elif self.__funcionarios_dao.getFuncionario(valores["usuario"]) != 0 or self.__gerente_dao.getGerente(valores["usuario"]) != 0:
                 self.__tela_gerente.msg("usuário já existente")
-                self.__tela_gerente.close_cadastrar_funcionario()
 
             else:
                 self.__controlador_sistema.controlador_funcionario.cadastrar(
                     valores)
-
                 self.__tela_gerente.msg("Funcionário Cadastrado")
                 print(self.__funcionarios_dao.get_all())
-
-                self.__tela_gerente.close_cadastrar_funcionario()
+                
+            self.__tela_gerente.close_cadastrar_funcionario()
+            return
 
     def alterar_funcionario(self):
         opçao, valores = self.__tela_gerente.buscar_funcionario()
@@ -123,7 +122,7 @@ class ControladorGerente:
 
     def abre_tela(self):
         lista_opçoes = {"menu_funcionario": self.menu_funcionario,
-                        "menu_hospede": self.__controlador_hospede.abre_tela}
+                        "menu_hospede": self.__controlador_hospede.abre_tela, "reservar": self.__controlador_reserva.abre_tela}
 
         while True:
             opçao, valores = self.__tela_gerente.opçoes_menu()

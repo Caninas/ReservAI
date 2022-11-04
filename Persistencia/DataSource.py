@@ -6,7 +6,7 @@ class DataSource:
     __instance = None       
     def __init__(self):
         self.__arquivo = f"{Path.home()}\Documents\ReservAI.pkl"     #universializar path para o user (mudar?)
-        self.__cache = {"gerente":[], "funcionarios":[], "hospedes":[]}
+        self.__cache = {"gerente":[], "funcionarios":[], "hospedes":[], "reservas": []}
 
         try:
             self.abrir()
