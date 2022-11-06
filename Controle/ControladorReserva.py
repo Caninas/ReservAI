@@ -55,6 +55,38 @@ class ControladorReserva:
             print(i.info_basica())                      
         return 1
 
+    # def realizar_checkin(self, valores):
+    #     # if self.checar_data_livre:
+    #     #todo pegar cpfs
+    #     #todo pegar numero do quarto e reserva
+    #     hospedes = []
+    #     if hospedes
+    #     hospedes.append(self.__controlador_hospede.buscar_hospede(valores["cpf1"]))
+    #     hospedes.append(self.__controlador_hospede.buscar_hospede(valores["cpf2"]))
+    #     if quarto.tipo == 'familia':
+    #         hospedes.append(self.__controlador_hospede.buscar_hospede(valores["cpf3"]))
+    #         hospedes.append(self.__controlador_hospede.buscar_hospede(valores["cpf4"]))
+    #     hospedes = [x for x in hospedes if x and x != None]
+    #     hospede_principal = self.__controlador_hospede.buscar_hospede(valores["cpf"])
+    #     if hospede_principal:    # existe
+    #         self.__tela_reserva.close_menu_reserva()
+    #     else:     # nao existe
+    #         hospede = self.__controlador_hospede.cadastrar()
+    #
+    #     quarto = self.__quarto_dao.getQuarto(int(valores["n_quarto"]))
+    #
+    #     cod = self.__reserva_dao.getCodUltimaReserva() + 1
+    #     reserva = ReservaQuarto(cod, 1, quarto, [hospede], "10/07/22",                          # mesmo hospede com endereços de mem diferentes?
+    #                             valores["data_entrada"], valores["data_saida"])
+    #     self.__reserva_dao.add(reserva)
+    #
+    #     self.__tela_reserva.msg("Reserva criada com sucesso!")
+    #     self.__tela_reserva.close_menu_reserva()
+    #
+    #     for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
+    #         print(i.info_basica())
+    #     return 1
+
     def abre_tela(self):                            # clica quarto mapa (recebe numero dele aqui)
         lista_opçoes = {1: self.realizar_reserva}
         while True:

@@ -18,6 +18,34 @@ class TelaReserva():
         ]
         self.__windows_menu_reserva = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
 
+    def tela_checkin_quarto_familia(self, cpf_dono_reserva):
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text('** Check-in do quarto **')],
+            [sg.Text('CPF`s dos hóspedes (se não quiser alocar, deixar vazio):')],
+            [sg.Text(f'Hospede 1: {cpf_dono_reserva}')],
+            [sg.Text('Hóspede 2:', font=("Arial", 15)), sg.Input(key="cpf2")],
+            [sg.Text('Hóspede 3:', font=("Arial", 15)), sg.Input(key="cpf3")],
+            [sg.Text('Hóspede 4:', font=("Arial", 15)), sg.Input(key="cpf4")],
+            [sg.Button('Confirmar', key=1)],
+            [sg.Button('Cancelar', key=0)]
+        ]
+        self.__windows_menu_reserva = sg.Window('MENU CHECK-IN', size=(800, 450), element_justification="c").Layout(
+            layout)
+
+    def tela_checkin_quarto_casal(self, cpf_dono_reserva):
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text('** Check-in do quarto **')],
+            [sg.Text('CPF`s dos hóspedes (se não quiser alocar, deixar vazio):')],
+            [sg.Text(f'Hospede 1: {cpf_dono_reserva}')],
+            [sg.Text('Hóspede 2:', font=("Arial", 15)), sg.Input(key="cpf2")],
+            [sg.Button('Confirmar', key=1)],
+            [sg.Button('Cancelar', key=0)]
+        ]
+        self.__windows_menu_reserva = sg.Window('MENU CHECK-IN', size=(800, 450), element_justification="c").Layout(
+            layout)
+
     def opçoes_reserva(self):
         self.menu_reserva()
         while True:
