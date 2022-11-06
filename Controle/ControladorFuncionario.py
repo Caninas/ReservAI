@@ -45,10 +45,14 @@ class ControladorFuncionario:
                 self.__tela_funcionario.close_menu()
                 self.__controlador_sistema.encerrar_sistema()
                 break
-
             self.__tela_funcionario.close_menu()
 
             if opçao == "deslogar":
                 break
 
-            lista_opçoes["reservar"](opçao, self.__dia_selecionado)
+            if opçao == "menu_hospede":
+                lista_opçoes[opçao]()
+            else:
+                lista_opçoes["reservar"](opçao, self.__dia_selecionado)
+
+

@@ -144,5 +144,8 @@ class ControladorGerente:
 
             if opçao == "deslogar":
                 break
-
-            lista_opçoes["reservar"](opçao, self.__dia_selecionado)
+            
+            if opçao == "menu_hospede" or opçao == "menu_funcionario":
+                lista_opçoes[opçao]()
+            else:
+                lista_opçoes["reservar"](opçao, self.__dia_selecionado)
