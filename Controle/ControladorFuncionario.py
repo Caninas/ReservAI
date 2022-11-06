@@ -11,7 +11,7 @@ class ControladorFuncionario:
         self.__controlador_sistema = controlador_sistema
         self.__fernet = cript
 
-        self.__dia_selecionado = dt.today()
+        self.__dia_selecionado = dt.today().date()
 
         self.__controlador_hospede = controlador_hospede
         self.__controlador_reserva = controlador_reserva
@@ -37,11 +37,15 @@ class ControladorFuncionario:
     def abre_tela(self):
         lista_opçoes = {"menu_hospede": self.__controlador_hospede.abre_tela, "reservar": self.__controlador_reserva.abre_tela}
         
-        dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+        dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100} (hoje)"
         refresh = False
+
+        cores_quartos = self.__controlador_reserva.getStatusQuartos(self.__dia_selecionado)
+        
         while True:
             print(self.__dia_selecionado)
-            opçao, valores = self.__tela_funcionario.opçoes_menu(dia, refresh)
+            
+            opçao, valores = self.__tela_funcionario.opçoes_menu(dia, cores_quartos, refresh)
             
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_funcionario.close_menu()
@@ -55,13 +59,29 @@ class ControladorFuncionario:
             if opçao == "sd":
                 self.__dia_selecionado = self.__dia_selecionado + timedelta(1)
                 dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+                if self.__dia_selecionado == dt.today().date():
+                    dia = dia + " (hoje)"
+
                 self.__tela_funcionario.window_menu['data'].update(dia)
+
+                cores_quartos = self.__controlador_reserva.getStatusQuartos(self.__dia_selecionado)
+                for i in range(len(cores_quartos)):
+                    self.__tela_funcionario.window_menu[f'c{i+1}'].update(background_color=cores_quartos[i])
+
                 refresh = True
                 continue
             elif opçao == "se":
                 self.__dia_selecionado = self.__dia_selecionado - timedelta(1)
                 dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+                if self.__dia_selecionado == dt.today().date():
+                    dia = dia + " (hoje)"
+
                 self.__tela_funcionario.window_menu['data'].update(dia)
+                
+                cores_quartos = self.__controlador_reserva.getStatusQuartos(self.__dia_selecionado)
+                for i in range(len(cores_quartos)):
+                    self.__tela_funcionario.window_menu[f'c{i+1}'].update(background_color=cores_quartos[i])
+
                 refresh = True
                 continue
 
@@ -70,7 +90,7 @@ class ControladorFuncionario:
                 lista_opçoes[opçao]()
             else:
                 self.__tela_funcionario.close_menu()
-                lista_opçoes["reservar"](opçao, dia)
+                lista_opçoes["reservar"](opçao, self.__dia_selecionado)
             refresh = False
 
 

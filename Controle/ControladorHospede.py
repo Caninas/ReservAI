@@ -31,7 +31,7 @@ class ControladorHospede:
             self.__tela_hospede.close_cadastro()
             return
 
-        if self.verificar_se_cpf_existe(valores["cpf"]) == True:
+        if self.verificar_se_cpf_existe(valores["cpf"]) != True:
             hospede = Hospede(valores["nome"], valores["cpf"], valores["data_nascimento"],
                             valores["telefone"], valores["email"], valores["sexo"], valores["nacionalidade"],
                             valores["rua"], valores["num"], valores["cidade"], valores["estado"], valores["pais"])

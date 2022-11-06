@@ -59,19 +59,19 @@ class ControladorReserva:
         livre = True
         for reserva in self.reservas:
             if reserva.quarto.numero == n_quarto:
-                inicio = reserva.data_entrada
-                fim = reserva.data_saida
+                inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y")
+                fim = dt.strptime(reserva.data_saida, "%d-%m-%y")
 
-                if dt.strptime(inicio, "%d-%m-%y") <= dt.strptime(valores['data_entrada'], "%d-%m-%y") < dt.strptime(fim, "%d-%m-%y"):
+                if inicio <= dt.strptime(valores['data_entrada'], "%d-%m-%y") < fim:
                     livre = False
                     break
-                if dt.strptime(inicio, "%d-%m-%y") < dt.strptime(valores['data_saida'], "%d-%m-%y") < dt.strptime(fim, "%d-%m-%y"):
+                if inicio < dt.strptime(valores['data_saida'], "%d-%m-%y") < fim:
                     livre = False
                     break
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < dt.strptime(inicio, "%d-%m-%y") <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
+                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < inicio <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
                     livre = False
                     break
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < dt.strptime(fim, "%d-%m-%y") <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
+                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < fim <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
                     livre = False
                     break
 
@@ -84,6 +84,7 @@ class ControladorReserva:
     def realizar_reserva(self, n_quarto, dia):
         print(dia)
         retornar = False
+        dia = f"{dia.day:02d}-{dia.month:02d}-{dia.year%100}"
         while True:
             opçao, valores = self.__tela_reserva.opçoes_reservar(n_quarto, dia, retornar)
             print(opçao,valores)
@@ -130,11 +131,26 @@ class ControladorReserva:
             if reserva.quarto.numero == n_quarto:
                 inicio = reserva.data_entrada
                 fim = reserva.data_saida
-                if dt.strptime(inicio, "%d-%m-%y") <= dt.strptime(dia, "%d-%m-%y") <= dt.strptime(fim, "%d-%m-%y"):
+                if dt.strptime(inicio, "%d-%m-%y").date() <= dia <= dt.strptime(fim, "%d-%m-%y").date():
                     return reserva
 
         return 0
-                
+    
+    def getStatusQuartos(self, dia):
+        cores = [0 for x in range(0,8)]
+
+        for reserva in self.reservas:
+            inicio = reserva.data_entrada
+            fim = reserva.data_saida
+            if dt.strptime(inicio, "%d-%m-%y").date() <= dia <= dt.strptime(fim, "%d-%m-%y").date():
+                if reserva.status == 1:
+                    cores[reserva.quarto.numero-1] = "yellow"
+                elif reserva.status == 2:
+                    cores[reserva.quarto.numero-1] = "red"
+        cores = [cor if cor != 0 else "green" for cor in cores]
+        print(cores)
+        return cores
+
     def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
         lista_opçoes = {"reservar": self.realizar_reserva, "editar": self.editar_reserva, "excluir": self.excluir_reserva,
                         "check-in": print("self.check-in"), "checkout": print("self.checkout")}
@@ -146,7 +162,7 @@ class ControladorReserva:
 
             print(reserva)
             if reserva:              #checkin e checkout aqui
-                if dt.strptime(dia, "%d-%m-%y").date() == dt.today().date():
+                if dia == dt.today().date():
                     if reserva.status == 1:
                         opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_reservado(reserva)
                         self.__tela_reserva.close_menu_reserva_hoje_reservado()
@@ -166,7 +182,7 @@ class ControladorReserva:
                 self.realizar_reserva(botao, dia)
                 break
 
-            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED or opção == "voltar":
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 break
 
             if opçao in ["editar", "excluir"]:      # e checkin checkout
