@@ -59,4 +59,4 @@ class TelaPrincipal():
         self.login()
 
     def msg(self, msg):
-        sg.Popup(msg, any_key_closes=True)
+        sg.Popup(msg)

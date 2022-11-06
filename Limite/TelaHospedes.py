@@ -168,4 +168,4 @@ class TelaHospedes():
         self.__window_excluir.Close()
 
     def msg(self, msg):
-        sg.Popup(msg, any_key_closes=True)
+        sg.Popup(msg)

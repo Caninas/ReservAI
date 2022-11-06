@@ -3,6 +3,8 @@ from Limite.TelaGerente import TelaGerente
 
 import PySimpleGUI as sg
 from datetime import datetime as dt
+from datetime import timedelta
+
 
 class ControladorGerente:
     def __init__(self, controlador_sistema, controlador_hospede, controlador_reserva, dao_gerente, dao_funcionario, cript):
@@ -12,10 +14,7 @@ class ControladorGerente:
         self.__controlador_reserva = controlador_reserva
         self.__fernet = cript
 
-        data = dt.today()
-        self.__dia_selecionado = f"{data.day:02d}-{data.month:02d}-{data.year%100}"#dt.strftime("03-11-22", "%d-%m-%y")
-        print(self.__dia_selecionado)
-        #dt.strptime(f"{dt.today().day}-{dt.today().month}-{str(dt.today().year)}", "%d-%m-%Y")
+        self.__dia_selecionado = dt.today()
 
         self.__funcionarios_dao = dao_funcionario
         self.__tela_gerente = TelaGerente()
@@ -130,22 +129,39 @@ class ControladorGerente:
         lista_opçoes = {"menu_funcionario": self.menu_funcionario,
                         "menu_hospede": self.__controlador_hospede.abre_tela, "reservar": self.__controlador_reserva.abre_tela}
 
+        dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+        refresh = False
         while True:
             print(self.__dia_selecionado)
-            opçao, valores = self.__tela_gerente.opçoes_menu(self.__dia_selecionado)
-            # funçao mudar dia e atualizar na tela!
+            opçao, valores = self.__tela_gerente.opçoes_menu(dia, refresh)
 
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_gerente.close_menu()
                 self.__controlador_sistema.encerrar_sistema()
                 break
 
-            self.__tela_gerente.close_menu()
 
             if opçao == "deslogar":
+                self.__tela_gerente.close_menu()
                 break
             
+            if opçao == "sd":
+                self.__dia_selecionado = self.__dia_selecionado + timedelta(1)
+                dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+                self.__tela_gerente.window_menu['data'].update(dia)
+                refresh = True
+                continue
+            elif opçao == "se":
+                self.__dia_selecionado = self.__dia_selecionado - timedelta(1)
+                dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+                self.__tela_gerente.window_menu['data'].update(dia)
+                refresh = True
+                continue
+
             if opçao == "menu_hospede" or opçao == "menu_funcionario":
+                self.__tela_gerente.close_menu()
                 lista_opçoes[opçao]()
             else:
-                lista_opçoes["reservar"](opçao, self.__dia_selecionado)
+                self.__tela_gerente.close_menu()
+                lista_opçoes["reservar"](opçao, dia)
+            refresh = False

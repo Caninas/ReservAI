@@ -3,6 +3,7 @@ from Entidade.Funcionario import Funcionario
 
 import PySimpleGUI as sg
 from datetime import datetime as dt
+from datetime import timedelta
 
 class ControladorFuncionario:
     def __init__(self, controlador_sistema, controlador_hospede, controlador_reserva, dao_funcionario, cript):
@@ -10,7 +11,7 @@ class ControladorFuncionario:
         self.__controlador_sistema = controlador_sistema
         self.__fernet = cript
 
-        self.__dia_selecionado = dt.strptime(f"{dt.today().day}-{dt.today().month}-{str(dt.today().year)}", "%d-%m-%Y")
+        self.__dia_selecionado = dt.today()
 
         self.__controlador_hospede = controlador_hospede
         self.__controlador_reserva = controlador_reserva
@@ -35,24 +36,41 @@ class ControladorFuncionario:
     
     def abre_tela(self):
         lista_opçoes = {"menu_hospede": self.__controlador_hospede.abre_tela, "reservar": self.__controlador_reserva.abre_tela}
-
+        
+        dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+        refresh = False
         while True:
-            opçao, valores = self.__tela_funcionario.opçoes_menu()
-
-            # funçao mudar dia e atualizar na tela!
+            print(self.__dia_selecionado)
+            opçao, valores = self.__tela_funcionario.opçoes_menu(dia, refresh)
             
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_funcionario.close_menu()
                 self.__controlador_sistema.encerrar_sistema()
                 break
-            self.__tela_funcionario.close_menu()
 
             if opçao == "deslogar":
+                self.__tela_funcionario.close_menu()
                 break
 
+            if opçao == "sd":
+                self.__dia_selecionado = self.__dia_selecionado + timedelta(1)
+                dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+                self.__tela_funcionario.window_menu['data'].update(dia)
+                refresh = True
+                continue
+            elif opçao == "se":
+                self.__dia_selecionado = self.__dia_selecionado - timedelta(1)
+                dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100}"
+                self.__tela_funcionario.window_menu['data'].update(dia)
+                refresh = True
+                continue
+
             if opçao == "menu_hospede":
+                self.__tela_funcionario.close_menu()
                 lista_opçoes[opçao]()
             else:
-                lista_opçoes["reservar"](opçao, self.__dia_selecionado)
+                self.__tela_funcionario.close_menu()
+                lista_opçoes["reservar"](opçao, dia)
+            refresh = False
 
 

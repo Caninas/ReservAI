@@ -55,45 +55,67 @@ class ControladorReserva:
         return valor_total
     
 
-    #def checar_data_livre(self):
-        # loop reservas / datas, data livre?
+    def checar_data_livre(self, n_quarto, valores):
+        livre = True
+        for reserva in self.reservas:
+            if reserva.quarto.numero == n_quarto:
+                inicio = reserva.data_entrada
+                fim = reserva.data_saida
 
-        # if data livre break / else voltar tela com preenchimento para alterar
+                if dt.strptime(inicio, "%d-%m-%y") <= dt.strptime(valores['data_entrada'], "%d-%m-%y") < dt.strptime(fim, "%d-%m-%y"):
+                    livre = False
+                    break
+                if dt.strptime(inicio, "%d-%m-%y") < dt.strptime(valores['data_saida'], "%d-%m-%y") < dt.strptime(fim, "%d-%m-%y"):
+                    livre = False
+                    break
+                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < dt.strptime(inicio, "%d-%m-%y") <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
+                    livre = False
+                    break
+                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < dt.strptime(fim, "%d-%m-%y") <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
+                    livre = False
+                    break
+
+        if not livre:
+            self.__tela_reserva.msg("Já existe uma reserva no período selecionado")
+            return 0
+
+        return 1
 
     def realizar_reserva(self, n_quarto, dia):
         print(dia)
-        opçao, valores = self.__tela_reserva.opçoes_reservar(n_quarto, dia)
-        print(opçao,valores)
-        
-        if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
-            self.__tela_reserva.close_menu_reservar()
-            return
-
-        # if self.checar_data_livre: data final apenas
-
-        hospede = self.__controlador_hospede.buscar_hospede(valores["cpf"])
-
-        if hospede:    # existe
-            self.__tela_reserva.close_menu_reservar()
-        else:     # nao existe
-            hospede = self.__controlador_hospede.cadastrar()
+        retornar = False
+        while True:
+            opçao, valores = self.__tela_reserva.opçoes_reservar(n_quarto, dia, retornar)
+            print(opçao,valores)
             
-        if hospede == None:
-            return
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
+                self.__tela_reserva.close_menu_reservar()
+                return
 
-        quarto = self.__quarto_dao.getQuarto(int(valores["n_quarto"]))
+            if self.checar_data_livre(n_quarto, valores):
+                hospede = self.__controlador_hospede.buscar_hospede(valores["cpf"])
 
-        cod = self.__reserva_dao.getCodUltimaReserva() + 1
-        reserva = ReservaQuarto(cod, 1, quarto, [hospede], "10-07-22",                          # mesmo hospede com endereços de mem diferentes?
-                                valores["data_entrada"], valores["data_saida"])
-        self.__reserva_dao.add(reserva)
+                if not hospede:    # não existe
+                    while True:
+                        hospede = self.__controlador_hospede.cadastrar()
+                            
+                        if hospede != None:
+                            break
 
-        self.__tela_reserva.msg("Reserva realizada com sucesso!")
-        self.__tela_reserva.close_menu_reservar()
+                quarto = self.__quarto_dao.getQuarto(n_quarto)
 
-        for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
-            print(i.info_basica())                      
-        return 1
+                cod = self.__reserva_dao.getCodUltimaReserva() + 1
+                reserva = ReservaQuarto(cod, 1, quarto, [hospede], "10-07-22",                          # mesmo hospede com endereços de mem diferentes?
+                                        valores["data_entrada"], valores["data_saida"])
+                self.__reserva_dao.add(reserva)
+
+                self.__tela_reserva.msg("Reserva realizada com sucesso!")
+                self.__tela_reserva.close_menu_reservar()
+
+                for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
+                    print(i.info_basica())                      
+                return 1
+            retornar = True
 
     def editar_reserva(self, n_quarto):
         print("editar")
@@ -104,17 +126,16 @@ class ControladorReserva:
         pass
 
     def getReservadoDia(self, n_quarto, dia):
-        #hoje = dt.now()                     # dia de hoje, deixar alterar dps
         for reserva in self.reservas:
             if reserva.quarto.numero == n_quarto:
                 inicio = reserva.data_entrada
                 fim = reserva.data_saida
-                if dt.strptime(inicio, "%d-%m-%y") <= dt.strptime(dia, "%d-%m-%y") < dt.strptime(fim, "%d-%m-%y"):
+                if dt.strptime(inicio, "%d-%m-%y") <= dt.strptime(dia, "%d-%m-%y") <= dt.strptime(fim, "%d-%m-%y"):
                     return reserva
+
         return 0
                 
     def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
-
         lista_opçoes = {"reservar": self.realizar_reserva, "editar": self.editar_reserva, "excluir": self.excluir_reserva,
                         "check-in": print("self.check-in"), "checkout": print("self.checkout")}
         
@@ -122,28 +143,35 @@ class ControladorReserva:
             for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
                 print(i.quarto.numero, i.data_entrada, i.data_saida)   
             reserva = self.getReservadoDia(botao, dia)
+
             print(reserva)
-            if reserva:
-                if reserva.status == 1:
-                    if dt.strptime(reserva.data_entrada, "%d-%m-%y") < dt.today() < dt.strptime(reserva.data_saida, "%d-%m-%y"):
+            if reserva:              #checkin e checkout aqui
+                if dt.strptime(dia, "%d-%m-%y").date() == dt.today().date():
+                    if reserva.status == 1:
                         opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_reservado(reserva)
                         self.__tela_reserva.close_menu_reserva_hoje_reservado()
-                    else:
+                    elif reserva.status == 2:
+                        opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_ocupada(reserva)
+                        self.__tela_reserva.close_menu_reserva_hoje_ocupado()
+
+                else:
+                    if reserva.status == 1:
                         opçao, valores = self.__tela_reserva.opçoes_menu_reserva_outro_reservado(reserva)
                         self.__tela_reserva.close_menu_reserva_outro_reservado()
-                elif reserva.status == 2:
-                    opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_ocupada(reserva)
-                    self.__tela_reserva.close_menu_reserva_hoje_ocupado()
-
-                if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
-                    break
-
-                if opçao in ["editar", "excluir"]:      # e checkin checkout (finalizar)
-                    lista_opçoes[opçao](botao)
+                    elif reserva.status == 2:
+                        opçao, valores = self.__tela_reserva.opçoes_menu_reserva_outro_ocupado(reserva)
+                        self.__tela_reserva.close_menu_reserva_outro_ocupado()
 
             else:
-
                 self.realizar_reserva(botao, dia)
                 break
+
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED or opção == "voltar":
+                break
+
+            if opçao in ["editar", "excluir"]:      # e checkin checkout
+                lista_opçoes[opçao](botao)
+
+
 
 

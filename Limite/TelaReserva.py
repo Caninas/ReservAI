@@ -50,9 +50,21 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Editar Reserva', key="editar"), sg.Button('Finalizar Reserva', key="excluir")]
+            [sg.Button('Editar Reserva', key="editar"), sg.Button('Excluir Reserva', key="excluir")]
         ]
         self.__windows_menu_reserva_outro_reservado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
+
+    def menu_reserva_outro_ocupado(self, reserva):
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text(f'Reserva número: {reserva.cod} ', font=("Arial", 15))],
+            [sg.Text(f'Hóspede principal: {reserva.lista_hospedes[0].nome} ({reserva.lista_hospedes[0].cpf}) ', font=("Arial", 15))],
+            [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
+            [sg.Text(f'Data de Saída: {reserva.data_saida}')],
+            
+            [sg.Button('Voltar', key="voltar")]
+        ]
+        self.__windows_menu_reserva_outro_ocupado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
 
     def opçoes_menu_reserva_hoje_reservado(self, reserva):
         self.menu_reserva_hoje_reservado(reserva)
@@ -84,8 +96,19 @@ class TelaReserva():
 
         return button, values
     
-    def opçoes_reservar(self, quarto, dia):
-        self.menu_reservar(quarto, dia)
+    def opçoes_menu_reserva_outro_ocupado(self, reserva):
+        self.menu_reserva_outro_ocupado(reserva)
+            
+        button, values = self.__windows_menu_reserva_outro_reservado.Read()
+
+        if button == None or button == 0 or button == sg.WIN_CLOSED:
+            return button, values
+
+        return button, values
+
+    def opçoes_reservar(self, quarto, dia, retornar=False):
+        if retornar == False:
+            self.menu_reservar(quarto, dia)
         while True:
             button, values = self.__windows_menu_reservar.Read()
             print(values)
@@ -132,4 +155,4 @@ class TelaReserva():
         self.__windows_menu_reserva_outro_reservado.Close()
 
     def msg(self, msg):
-        sg.Popup(msg, any_key_closes=True)
+        sg.Popup(msg)
