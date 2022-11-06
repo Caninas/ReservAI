@@ -16,7 +16,7 @@ class TelaPrincipal():
             [sg.Text('LOGIN', font=("Arial", 15), justification="c")],
             [sg.Text('Usuário'), sg.Input(key="usuario")],
             [sg.Text('Senha'), sg.Input(key="senha", password_char="*")],
-            [sg.Button('Entrar', key="entrar")],
+            [sg.Button('Entrar', key="entrar", bind_return_key=True)],
             [sg.Button('Sair', key=0)]
                             ], border_width=0, pad=((0,0),(130,0)), element_justification="c")
             ]
@@ -34,7 +34,7 @@ class TelaPrincipal():
             [sg.Text('Nome'), sg.Input(key="nome")],
             [sg.Text('Usuário'), sg.Input(key="usuario")],
             [sg.Text('Senha'), sg.Input(key="senha")],
-            [sg.Button('Cadastrar', key="cadastrar")],
+            [sg.Button('Cadastrar', key="cadastrar", bind_return_key=True)],
             [sg.Button('Sair', key=0)]
         ]
 
@@ -46,7 +46,6 @@ class TelaPrincipal():
         if event == 0 or event == sg.WIN_CLOSED:
             return None
         return {"nome": values['nome'], "usuario": values['usuario'], "senha": values['senha']}
-
 
     def opcoes_login(self):
         self.login()
@@ -60,4 +59,4 @@ class TelaPrincipal():
         self.login()
 
     def msg(self, msg):
-        sg.Popup(msg)
+        sg.Popup(msg, any_key_closes=True)

@@ -43,6 +43,10 @@ class ControladorPrincipal:
     def controlador_funcionario(self):
         return self.__controlador_funcionario
 
+    @property
+    def DAOreserva(self):
+        return self.__DAOreserva
+
     def iniciar_sistema(self):
         if len(self.__DAOgerente.get_all()) > 0:
             self.abre_login()

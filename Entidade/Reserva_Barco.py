@@ -3,7 +3,7 @@ from Barco import Barco
 
 class Reserva_Barco:
     def __init__(self, barco: Barco, cod: int, cod_reserva: int, 
-    data_entrada: str,data_reserva: str, data_saida: str, 
+    data_entrada: str, data_reserva: str, data_saida: str, 
     status: int, valor: float):
         self.__barco = barco
         self.__cod = cod

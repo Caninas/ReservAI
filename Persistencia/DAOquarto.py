@@ -48,7 +48,6 @@ class DAOquarto:
             DAOquarto.__instance = object.__new__(cls)
         return DAOquarto.__instance
 
-
     def guardar(self, data=None):
         if data != None:
             #self.__cache[data[0]] = data[1]
@@ -62,7 +61,6 @@ class DAOquarto:
             return self.__cache[data]
         else:
             self.__cache = pickle.load(open(self.__arquivo, "rb"))
-
 
     def apagar(self):
         self.__cache = {"quartos": []}
