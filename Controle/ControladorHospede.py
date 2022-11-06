@@ -15,7 +15,7 @@ class ControladorHospede:
     def hospedes(self):
         return self.__hospede_dao.get_all()
 
-    def verificar_se_nome_existe(self, cpf):
+    def verificar_se_cpf_existe(self, cpf):
         for hospede in self.__hospede_dao.get_all():
             if hospede.cpf == cpf:
                 return True
@@ -31,14 +31,21 @@ class ControladorHospede:
             self.__tela_hospede.close_cadastro()
             return
 
-        hospede = Hospede(valores["nome"], valores["cpf"], valores["data_nascimento"],
-                          valores["telefone"], valores["email"], valores["sexo"], valores["nacionalidade"],
-                          valores["rua"], valores["num"], valores["cidade"], valores["estado"], valores["pais"])
-        self.__hospede_dao.add(hospede)
+        if self.verificar_se_cpf_existe(valores["cpf"]) == True:
 
-        self.__tela_hospede.msg("Hóspede Cadastrado")
-        self.__tela_hospede.close_cadastro()
+            hospede = Hospede(valores["nome"], valores["cpf"], valores["data_nascimento"],
+                            valores["telefone"], valores["email"], valores["sexo"], valores["nacionalidade"],
+                            valores["rua"], valores["num"], valores["cidade"], valores["estado"], valores["pais"])
+            self.__hospede_dao.add(hospede)
 
+            self.__tela_hospede.msg("Hóspede Cadastrado")
+            self.__tela_hospede.close_cadastro()
+
+        else:
+            self.__tela_hospede.msg("CPF já cadastrado!")
+            self.__tela_hospede.close_cadastro()
+            return
+    
         return hospede
 
     def alterar_hospede(self):
@@ -74,22 +81,30 @@ class ControladorHospede:
             self.__tela_hospede.close_busca()
             return
 
-        hospede = self.buscar_hospede(valores["cpf"])
-        self.__tela_hospede.close_busca()
+        reserva = self.__controlador_sistema.DAOreserva.getReserva(valores["cpf"])
+        if not reserva:
+            if reserva.status != 0:
+                hospede = self.buscar_hospede(valores["cpf"])
+                self.__tela_hospede.close_busca()
 
-        if hospede == 0:
-            self.__tela_hospede.msg("Hóspede não encontrado!")
-            return
+                if hospede == 0:
+                    self.__tela_hospede.msg("Hóspede não encontrado!")
+                    return
 
-        opçao, valores = self.__tela_hospede.excluir_hospede(hospede)
+                opçao, valores = self.__tela_hospede.excluir_hospede(hospede)
 
-        if opçao == 0 or opçao == sg.WIN_CLOSED:
-            self.__tela_hospede.close_excluir_hospede()
-            return
+                if opçao == 0 or opçao == sg.WIN_CLOSED:
+                    self.__tela_hospede.close_excluir_hospede()
+                    return
 
-        self.__hospede_dao.remove(hospede)
-        self.__tela_hospede.msg("Hospede excluído com sucesso")
-        self.__tela_hospede.close_excluir_hospede()
+                self.__hospede_dao.remove(hospede)
+                self.__tela_hospede.msg("Hospede excluído com sucesso")
+                self.__tela_hospede.close_excluir_hospede()
+        
+        else:
+            self.__tela_hospede.msg("Hospede com reserva ativa")
+            self.__tela_hospede.close_busca()
+            
 
     def abre_tela(self):
         lista_opçoes = {"cadastrar_hospede": self.cadastrar, "alterar_hospede": self.alterar_hospede,

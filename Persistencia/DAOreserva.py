@@ -17,7 +17,6 @@ class DAOreserva:
     def atualizar(self):
         self.__main.guardar(["reservas", self.__cache])
 
-
     def getCodUltimaReserva(self):
         maior_cod = 0
         for reserva in self.__cache:
@@ -26,11 +25,18 @@ class DAOreserva:
         
         return maior_cod
 
+    def getReservaCod(self, cod):          # CPF?
+        objReserva = 0
+        for reserva in self.__cache:
+            if reserva.cod == int(cod):
+                objReserva = reserva
+
+        return objReserva
 
     def getReserva(self, cpf):          # CPF?
         objReserva = 0
         for reserva in self.__cache:
-            if reserva.cpf == int(cpf):
+            if reserva.lista_hospedes[0].cpf == int(cpf):
                 objReserva = reserva
 
         return objReserva

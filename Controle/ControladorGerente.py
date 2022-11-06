@@ -2,7 +2,7 @@ from Persistencia.DAOgerente import DAOgerente
 from Limite.TelaGerente import TelaGerente
 
 import PySimpleGUI as sg
-
+from datetime import datetime as dt
 
 class ControladorGerente:
     def __init__(self, controlador_sistema, controlador_hospede, controlador_reserva, dao_gerente, dao_funcionario, cript):
@@ -11,6 +11,11 @@ class ControladorGerente:
         self.__controlador_hospede = controlador_hospede
         self.__controlador_reserva = controlador_reserva
         self.__fernet = cript
+
+        data = dt.today()
+        self.__dia_selecionado = f"{data.day:02d}-{data.month:02d}-{data.year%100}"#dt.strftime("03-11-22", "%d-%m-%y")
+        print(self.__dia_selecionado)
+        #dt.strptime(f"{dt.today().day}-{dt.today().month}-{str(dt.today().year)}", "%d-%m-%Y")
 
         self.__funcionarios_dao = dao_funcionario
         self.__tela_gerente = TelaGerente()
@@ -121,11 +126,14 @@ class ControladorGerente:
         self.__tela_gerente.close_excluir_funcionario()
 
     def abre_tela(self):
+        
         lista_opçoes = {"menu_funcionario": self.menu_funcionario,
                         "menu_hospede": self.__controlador_hospede.abre_tela, "reservar": self.__controlador_reserva.abre_tela}
 
         while True:
-            opçao, valores = self.__tela_gerente.opçoes_menu()
+            print(self.__dia_selecionado)
+            opçao, valores = self.__tela_gerente.opçoes_menu(self.__dia_selecionado)
+            # funçao mudar dia e atualizar na tela!
 
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_gerente.close_menu()
@@ -137,4 +145,4 @@ class ControladorGerente:
             if opçao == "deslogar":
                 break
 
-            lista_opçoes[opçao]()
+            lista_opçoes["reservar"](opçao, self.__dia_selecionado)

@@ -2,13 +2,15 @@ from Limite.TelaFuncionario import TelaFuncionario
 from Entidade.Funcionario import Funcionario
 
 import PySimpleGUI as sg
-
+from datetime import datetime as dt
 
 class ControladorFuncionario:
     def __init__(self, controlador_sistema, controlador_hospede, controlador_reserva, dao_funcionario, cript):
         self.__funcionario_dao = dao_funcionario
         self.__controlador_sistema = controlador_sistema
         self.__fernet = cript
+
+        self.__dia_selecionado = dt.strptime(f"{dt.today().day}-{dt.today().month}-{str(dt.today().year)}", "%d-%m-%Y")
 
         self.__controlador_hospede = controlador_hospede
         self.__controlador_reserva = controlador_reserva
@@ -37,6 +39,8 @@ class ControladorFuncionario:
         while True:
             opçao, valores = self.__tela_funcionario.opçoes_menu()
 
+            # funçao mudar dia e atualizar na tela!
+            
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_funcionario.close_menu()
                 self.__controlador_sistema.encerrar_sistema()
@@ -47,4 +51,4 @@ class ControladorFuncionario:
             if opçao == "deslogar":
                 break
 
-            lista_opçoes[opçao]()
+            lista_opçoes["reservar"](opçao, self.__dia_selecionado)
