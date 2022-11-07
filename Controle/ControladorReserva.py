@@ -204,7 +204,7 @@ class ControladorReserva:
                         opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_reservado(reserva)
                         self.__tela_reserva.close_menu_reserva_hoje_reservado()
                     elif reserva.status == 2:
-                        opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_ocupada(reserva)
+                        opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_ocupado(reserva)
                         self.__tela_reserva.close_menu_reserva_hoje_ocupado()
 
                 else:
