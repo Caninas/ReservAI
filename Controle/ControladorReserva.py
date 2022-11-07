@@ -190,7 +190,7 @@ class ControladorReserva:
 
     def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
         lista_opçoes = {"reservar": self.realizar_reserva, "editar": self.editar_reserva, "excluir": self.excluir_reserva,
-                        "check-in": print("self.check-in"), "checkout": print("self.checkout")}
+                        "check-in": self.check_in , "checkout": print("self.checkout")}
         
         while True:
             for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
