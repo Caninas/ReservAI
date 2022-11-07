@@ -182,12 +182,15 @@ class ControladorGerente:
                 refresh = True
                 continue
 
-            if opçao == "menu_hospede" or opçao == "menu_funcionario" or opçao == "menu_barco":
+            if opçao == "menu_hospede" or opçao == "menu_funcionario":
                 self.__tela_gerente.close_menu()
                 lista_opçoes[opçao]()
             elif opçao == "listar_reservas":
                 self.__tela_gerente.close_menu()
                 lista_opçoes[opçao](self.__dia_selecionado)
+            elif opçao == "menu_barco":
+                self.__tela_gerente.close_menu()
+                lista_opçoes[opçao]()
             else:
                 self.__tela_gerente.close_menu()
                 lista_opçoes["reservar"](opçao, self.__dia_selecionado)

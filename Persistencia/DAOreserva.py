@@ -40,6 +40,14 @@ class DAOreserva:
                 objReserva = reserva
 
         return objReserva
+    
+    def getReservaparabarco(self, cpf, data_barco):
+        objReserva = 0
+        for reserva in self.__cache:
+            if reserva.lista_hospedes[0].cpf == int(cpf) and data_barco < reserva.data_saida and reserva.data_entrada >= data_barco and reserva.status == 2:
+                objReserva = reserva
+        
+        return objReserva
 
     def add(self, objeto: ReservaQuarto):
         if objeto != None and isinstance(objeto, ReservaQuarto):

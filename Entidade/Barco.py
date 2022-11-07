@@ -1,8 +1,8 @@
 class Barco:
-    def __init__(self, descricao: str, numero: int, valor: float):
+    def __init__(self, descricao: str, numero: int, status: int, valor: float):
         self.__descricao = descricao
         self.__numero = numero
-        #self.__status = status
+        self.__status = status
         self.__valor = valor
     
     @property
@@ -13,9 +13,9 @@ class Barco:
     def numero(self):
         return self.__numero
 
-    #@property
-    #def status(self):
-        #return self.__status
+    @property
+    def status(self):
+        return self.__status
 
     @property
     def valor(self):
@@ -29,9 +29,9 @@ class Barco:
     def numero(self, numero):
         self.__numero = numero
     
-    #@status.setter
-    #def status(self, status):
-        #self.__status = status
+    @status.setter
+    def status(self, status):
+        self.__status = status
     
     @valor.setter
     def valor(self, valor):
