@@ -18,6 +18,10 @@ class Quarto:
                 self.__status]
 
     @property
+    def capacidade(self):
+        return self.__capacidade
+
+    @property
     def valor(self):
         return self.__valor
 

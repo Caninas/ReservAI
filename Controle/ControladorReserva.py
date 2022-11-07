@@ -125,6 +125,35 @@ class ControladorReserva:
         print("excluir")
         pass
 
+    def finalizar_check_in(self, reserva, hospedes):
+        for hospede in hospedes:
+            if hospede not in reserva.lista_hospedes:
+                reserva.lista_hospedes.append(hospede)
+        reserva.status = 2
+
+
+    def check_in(self, reserva):
+        hospedes = [reserva.lista_hospedes[0]]
+        while True:
+            opçao, valores = self.__tela_reserva.menu_check_in(reserva, hospedes)
+            if opçao == "add_hospede":
+                hospede = self.__controlador_hospede.buscar_hospede(valores["cpf"])
+                if not hospede:  # não existe
+                    self.__tela_reserva.msg("Hóspede com esse CPF não foi encontrado no banco dados, favor cadastrar:")
+                    hospede = self.__controlador_hospede.cadastrar()
+                if hospede != None:
+                    hospedes.append(hospede)
+
+            elif opçao == "check-in":
+                self.finalizar_check_in(reserva, hospedes)
+                self.__tela_reserva.msg("check-in realizado com sucesso!")
+                opçao = 0
+            self.__tela_reserva.close_menu_check_in()
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED or opçao == "voltar":
+                break
+
+
+
     def getReservadoDia(self, n_quarto, dia):
         for reserva in self.reservas:
             if reserva.quarto.numero == n_quarto:
@@ -137,7 +166,7 @@ class ControladorReserva:
                 
     def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
         lista_opçoes = {"reservar": self.realizar_reserva, "editar": self.editar_reserva, "excluir": self.excluir_reserva,
-                        "check-in": print("self.check-in"), "checkout": print("self.checkout")}
+                        "check-in": self.check_in , "checkout": print("self.checkout")}
         
         while True:
             for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
@@ -166,11 +195,13 @@ class ControladorReserva:
                 self.realizar_reserva(botao, dia)
                 break
 
-            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED or opção == "voltar":
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED or opçao == "voltar":
                 break
 
             if opçao in ["editar", "excluir"]:      # e checkin checkout
                 lista_opçoes[opçao](botao)
+            elif opçao in  ['checkout', 'check-in']:
+                lista_opçoes[opçao](reserva)
 
 
 

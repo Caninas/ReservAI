@@ -36,6 +36,10 @@ class ReservaQuarto:
     def status(self):
         return self.__status
 
+    @status.setter
+    def status(self, valor):
+        self.__status =  valor
+
     @property
     def quarto(self):
         return self.__quarto
@@ -47,6 +51,10 @@ class ReservaQuarto:
     @property
     def lista_hospedes(self):
         return self.__lista_hospedes
+
+    @lista_hospedes.setter
+    def lista_hospedes(self, valor):
+        self.__lista_hospedes = valor
     
     @property
     def data_reserva(self):
