@@ -20,7 +20,7 @@ from Persistencia.DAOhospede import DAOhospede
 from Persistencia.DAOreserva import DAOreserva
 from Persistencia.DataSource import DataSource
 from Persistencia.DAOreserva_barco import DAOreserva_barco
-from Persistencia.DAObarco import DAObraco
+from Persistencia.DAObarco import DAObarco
 
 class ControladorPrincipal:
     def __init__(self):
@@ -34,7 +34,7 @@ class ControladorPrincipal:
         self.__DAOhospede = DAOhospede(self.__dataSource)
         self.__DAOreserva = DAOreserva(self.__dataSource)
         self.__DAOfuncionario = DAOfuncionario(self.__dataSource, self.__fernet)
-        self.__DAObarco = DAObraco(self.__dataSource)
+        self.__DAObarco = DAObarco(self.__dataSource)
         self.__DAOreserva_barco = DAOreserva_barco(self.__dataSource)
         
         self.__controlador_hospede = ControladorHospede(self, self.__DAOhospede)
