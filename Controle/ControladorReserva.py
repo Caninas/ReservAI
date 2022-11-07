@@ -54,7 +54,6 @@ class ControladorReserva:
         return valor_total
     
     def checkout(self, reserva):
-        
         valor = self.calcular_valor(reserva)
         opçao, valores = self.__tela_reserva.menu_check_out(reserva, valor)
         print("linha 55 controlreserv", opçao)
@@ -157,7 +156,7 @@ class ControladorReserva:
                 opçao = 0
             self.__tela_reserva.close_menu_check_in()
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED or opçao == "voltar":
-                break
+                return 1
 
 
     def getReservadoDia(self, n_quarto, dia):
@@ -201,8 +200,8 @@ class ControladorReserva:
                     inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y").date()
                     hoje = dt.today().date()
                     if inicio <= hoje:
-                        multa = 600 + (dia_selecionado - inicio).days * 600
-                        self.__tela_reserva.msg(f"O período de cancelamento passou.\nMulta: {multa} reais")
+                        multa = 600 + (hoje - inicio).days * 600
+                        self.__tela_reserva.msg(f"O período de cancelamento passou.\nMulta: {multa} reais.")     #! COLOCAR CONFIRMAÇÃO DE PAGAMENTO 
 
                     opçao, valores = self.__tela_reserva.opçao_cancelar()
                     if opçao == 1:
@@ -213,7 +212,7 @@ class ControladorReserva:
 
 
     def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
-        lista_opçoes = {"reservar": self.realizar_reserva, "editar": self.editar_reserva, "excluir": self.excluir_reserva,
+        lista_opçoes = {"reservar": self.realizar_reserva, "excluir": self.excluir_reserva,
                         "check-in": self.check_in , "check-out": self.checkout}
         
         while True:
