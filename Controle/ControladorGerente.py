@@ -191,4 +191,5 @@ class ControladorGerente:
             else:
                 self.__tela_gerente.close_menu()
                 lista_opçoes["reservar"](opçao, self.__dia_selecionado)
+                cores_quartos = self.__controlador_reserva.getStatusQuartos(self.__dia_selecionado)
             refresh = False

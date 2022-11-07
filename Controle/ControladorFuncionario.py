@@ -37,8 +37,8 @@ class ControladorFuncionario:
     
     def abre_tela(self):
         lista_opçoes = {"menu_hospede": self.__controlador_hospede.abre_tela, "reservar": self.__controlador_reserva.abre_tela,
-                        "listar_reservas": self.__controlador_reserva.listar_reservas
-        ,"menu_barco": self.__controlador_barco.abre_tela}
+                        "listar_reservas": self.__controlador_reserva.listar_reservas,
+                        "menu_barco": self.__controlador_barco.abre_tela}
         
         dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100} (hoje)"
         refresh = False
@@ -99,6 +99,7 @@ class ControladorFuncionario:
             else:
                 self.__tela_funcionario.close_menu()
                 lista_opçoes["reservar"](opçao, self.__dia_selecionado)
+                cores_quartos = self.__controlador_reserva.getStatusQuartos(self.__dia_selecionado)
             refresh = False
 
 

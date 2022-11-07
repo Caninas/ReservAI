@@ -130,10 +130,6 @@ class ControladorReserva:
                 return 1
             retornar = True
 
-    def editar_reserva(self, n_quarto):
-        print("editar")
-        pass
-
     def excluir_reserva(self, n_quarto):
         print("excluir")
         pass
@@ -143,6 +139,7 @@ class ControladorReserva:
             if hospede not in reserva.lista_hospedes:
                 reserva.lista_hospedes.append(hospede)
         reserva.status = 2
+        self.__reserva_dao.atualizar()
 
 
     def check_in(self, reserva):
@@ -164,7 +161,6 @@ class ControladorReserva:
             self.__tela_reserva.close_menu_check_in()
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED or opçao == "voltar":
                 break
-
 
 
     def getReservadoDia(self, n_quarto, dia):
@@ -193,8 +189,8 @@ class ControladorReserva:
 
 
     def listar_reservas(self, dia):
-        cores = self.getStatusQuartos(dia)
-        lista = [[reserva.cod, reserva.quarto.numero, reserva.data_entrada, reserva.data_saida, reserva.lista_hospedes[0].nome] for reserva in self.reservas]
+        cores = [(row, cor) for row, cor in enumerate(self.getStatusQuartos(dia))]
+        lista = [[reserva.cod, "Concluída" if reserva.status == 0 else "Reservado" if reserva.status == 1 else "Ocupado", reserva.quarto.numero, reserva.data_entrada, reserva.data_saida, reserva.lista_hospedes[0].nome] for reserva in self.reservas]
 
         button, values = self.__tela_reserva.opçoes_menu_lista_reservas(lista, cores)
         self.__tela_reserva.close_menu_lista_reservas()
@@ -233,7 +229,7 @@ class ControladorReserva:
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 break
 
-            if opçao in ["editar", "excluir"]:      # e checkin checkout
+            if opçao == "excluir":      # e checkin checkout
                 lista_opçoes[opçao](botao)
             elif opçao in  ['check-out', 'check-in']:
                 if lista_opçoes[opçao](reserva):
