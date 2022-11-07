@@ -134,7 +134,7 @@ class TelaReserva():
                 if valor == "" or valor == None:
                     vazio = True
                     break
-            if 'cpf' in values.keys():
+            if 'add_hospede' in values.keys():
                 if vazio == True or not values["cpf"].isnumeric():
                     self.msg("Todos os campos devem ser preenchidos corretamente!")
                     continue
