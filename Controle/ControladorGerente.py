@@ -127,7 +127,9 @@ class ControladorGerente:
     def abre_tela(self):
         
         lista_opçoes = {"menu_funcionario": self.menu_funcionario,
-                        "menu_hospede": self.__controlador_hospede.abre_tela, "reservar": self.__controlador_reserva.abre_tela}
+                        "menu_hospede": self.__controlador_hospede.abre_tela, 
+                        "reservar": self.__controlador_reserva.abre_tela,
+                        "listar_reservas": self.__controlador_reserva.listar_reservas}
 
         dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100} (hoje)"
         refresh = False
@@ -181,6 +183,9 @@ class ControladorGerente:
             if opçao == "menu_hospede" or opçao == "menu_funcionario":
                 self.__tela_gerente.close_menu()
                 lista_opçoes[opçao]()
+            elif opçao == "listar_reservas":
+                self.__tela_gerente.close_menu()
+                lista_opçoes[opçao](self.__dia_selecionado)
             else:
                 self.__tela_gerente.close_menu()
                 lista_opçoes["reservar"](opçao, self.__dia_selecionado)

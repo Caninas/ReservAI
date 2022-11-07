@@ -14,10 +14,11 @@ class TelaGerente():
         layout = [
             [sg.Text('MENU', font=("Arial", 20)), sg.Button("Sair", key="deslogar", pad=((640, 0),(10,0)))],
             [sg.Button('Menu Funcionário', key="menu_funcionario"), sg.Button('Menu Hóspede', key="menu_hospede")],
+            [sg.Button('Listar Reservas', key="listar_reservas")],
 
-            [sg.Button("Dia anterior", key="se"), sg.Text(f"{data}", key="data"),sg.Button("Próximo dia", key="sd")],
+            [sg.Button("Dia anterior", key="se", pad=((0, 15), (30, 0))), sg.Text(f"{data}", font=("Arial", 13), key="data", pad=((0, 0), (30, 0))),sg.Button("Próximo dia", key="sd", pad=((15, 0), (30, 0)))],
 
-            [sg.Button('QUARTO 1', key=1, pad=((0, 30),(130,0))), sg.Button('QUARTO 2', key=2, pad=((0, 30),(130,0))), sg.Button('QUARTO 3', key=3, pad=((0, 30),(130,0))), sg.Button('QUARTO 4', key=4, pad=((0, 0),(130,0)))],
+            [sg.Button('QUARTO 1', key=1, pad=((0, 30),(70,0))), sg.Button('QUARTO 2', key=2, pad=((0, 30),(70,0))), sg.Button('QUARTO 3', key=3, pad=((0, 30),(70,0))), sg.Button('QUARTO 4', key=4, pad=((0, 0),(70,0)))],
             [sg.Text("          ", key="c1", background_color=cores[0], pad=((0, 61),(0,0))), sg.Text("          ", key="c2", background_color=cores[1], pad=((0, 61),(0,0))), sg.Text("          ", key="c3", background_color=cores[2], pad=((0, 61),(0,0))), sg.Text("          ", key="c4", background_color=cores[3], pad=((0, 0),(0,0)))],
             [sg.Button('QUARTO 5', key=5, pad=((0, 30),(30,0))), sg.Button('QUARTO 6', key=6, pad=((0, 30),(30,0))), sg.Button('QUARTO 7', key=7, pad=((0, 30),(30,0))), sg.Button('QUARTO 8', key=8, pad=((0, 0),(30,0)))],
             [sg.Text("          ", key="c5", background_color=cores[4], pad=((0, 61),(0,0))), sg.Text("          ", key="c6", background_color=cores[5], pad=((0, 61),(0,0))), sg.Text("          ", key="c7", background_color=cores[6], pad=((0, 61),(0,0))), sg.Text("          ", key="c8", background_color=cores[7], pad=((0, 0),(0,0)))], 
