@@ -2,18 +2,20 @@ from Limite.TelaReserva import TelaReserva
 from Entidade.ReservaQuarto import ReservaQuarto
 from Entidade.Quarto import Quarto
 from Persistencia.DAOquarto import DAOquarto   # temporario para testes
+from Persistencia.DAOreserva_barco import DAOreserva_barco
 import PySimpleGUI as sg
 from datetime import datetime as dt
 
 
 class ControladorReserva:
-    def __init__(self, controlador_sistema, controlador_hospede, dao_reserva):
+    def __init__(self, controlador_sistema, controlador_hospede, dao_reserva, dao_reserva_barco):
         self.__controlador_sistema = controlador_sistema
         self.__controlador_hospede = controlador_hospede
 
         self.__reserva_dao = dao_reserva
         self.__quarto_dao = DAOquarto()      # temporario para testes
         self.__tela_reserva = TelaReserva()
+        self.__reserva_barco_dao = dao_reserva_barco
         self.criar_quartos()
 
     @property
@@ -29,36 +31,46 @@ class ControladorReserva:
                 quarto = Quarto(i, 4, 1, 2, 1000, "Quarto Familia (4 lugares)", 0)
                 self.__quarto_dao.add(quarto)
 
-    def alterar_status_res(self, reserva, status):
-        pass
-
     def calcula_passeio(self, reserva):
         passeios = 0
         for reserva_barco in self.__reserva_barco_dao.get_all():
-            if reserva_barco.cod_reserva == reserva:
-                passeios += 1
+            if reserva_barco.cod_reserva == reserva.cod:
+                passeios += 100
         return passeios
 
     def calcula_diarias(self, reserva):  
         inicio = reserva.data_entrada
         fim = reserva.data_saida
-        diarias = (dt.strptime(inicio, "%d/%m/%y") - dt.strptime(fim, "%d/%m/%y")).days
+        diarias = (dt.strptime(fim, "%d-%m-%y") - dt.strptime(inicio, "%d-%m-%y")).days
         print(f"A reserva durou {diarias} dias!")
 
         return diarias
 
     def calcular_valor(self, reserva):
         valor_diarias = self.calcula_diarias(reserva)*reserva.quarto.valor
-        valor_barco = self.calcula_passeio(reserva.cod)
+        valor_barco = self.calcula_passeio(reserva)
         valor_total = (valor_diarias) + (valor_barco)
 
         return valor_total
     
+    def checkout(self, reserva):
+        
+        valor = self.calcular_valor(reserva)
+        opçao, valores = self.__tela_reserva.menu_check_out(reserva, valor)
+        print("linha 55 controlreserv", opçao)
+        if opçao == "check-out":
+            reserva.status = 0
+            self.__tela_reserva.msg("Check-out realizado com sucesso!")
+            self.__tela_reserva.close_menu_check_out()
+            opçao = 0
+            self.__reserva_dao.atualizar()
+            return 1
+            
 
     def checar_data_livre(self, n_quarto, valores):
         livre = True
         for reserva in self.reservas:
-            if reserva.quarto.numero == n_quarto:
+            if reserva.quarto.numero == n_quarto and reserva.status != 0:
                 inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y")
                 fim = dt.strptime(reserva.data_saida, "%d-%m-%y")
 
@@ -157,12 +169,11 @@ class ControladorReserva:
 
     def getReservadoDia(self, n_quarto, dia):
         for reserva in self.reservas:
-            if reserva.quarto.numero == n_quarto:
+            if reserva.quarto.numero == n_quarto and reserva.status != 0:
                 inicio = reserva.data_entrada
                 fim = reserva.data_saida
                 if dt.strptime(inicio, "%d-%m-%y").date() <= dia <= dt.strptime(fim, "%d-%m-%y").date():
                     return reserva
-
         return 0
 
     def getStatusQuartos(self, dia):
@@ -190,7 +201,7 @@ class ControladorReserva:
 
     def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
         lista_opçoes = {"reservar": self.realizar_reserva, "editar": self.editar_reserva, "excluir": self.excluir_reserva,
-                        "check-in": self.check_in , "checkout": print("self.checkout")}
+                        "check-in": self.check_in , "check-out": self.checkout}
         
         while True:
             for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
@@ -224,8 +235,10 @@ class ControladorReserva:
 
             if opçao in ["editar", "excluir"]:      # e checkin checkout
                 lista_opçoes[opçao](botao)
-            elif opçao in  ['checkout', 'check-in']:
-                lista_opçoes[opçao](reserva)
+            elif opçao in  ['check-out', 'check-in']:
+                if lista_opçoes[opçao](reserva):
+                    break
+                
 
 
 
