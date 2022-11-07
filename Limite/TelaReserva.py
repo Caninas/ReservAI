@@ -26,7 +26,7 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Check-in', key="check-in"), sg.Button('Editar Reserva', key="editar"), sg.Button('Excluir Reserva', key="excluir")],
+            [sg.Button('Check-in', key="check-in"), sg.Button('Excluir Reserva', key="excluir")],
             [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_hoje_reservado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
@@ -39,7 +39,7 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Editar Reserva', key="editar"), sg.Button('Finalizar Reserva (checkout)', key="chekout")],
+            [sg.Button('Finalizar Reserva (checkout)', key="chekout")],
             [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_hoje_ocupado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
@@ -52,7 +52,7 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Editar Reserva', key="editar"), sg.Button('Excluir Reserva', key="excluir")],
+            [sg.Button('Excluir Reserva', key="excluir")],
             [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_outro_reservado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
@@ -75,7 +75,8 @@ class TelaReserva():
             [sg.Text('RESERVAS', font=("Arial", 20))],
             [sg.Table(values=lista,  key="playlist",
                          num_rows=17,
-                         headings=["Código", "Quarto", "Data Entrada", "Data Saída", "Hóspede"],
+                         headings=["Código", "Status", "Quarto", "Data Entrada", "Data Saída", "Hóspede"],
+                         row_colors=cores,
                          justification="c",
                          pad=((0, 0), (20, 0))
                          )
@@ -83,6 +84,22 @@ class TelaReserva():
             [sg.Button("Voltar", key=0, pad=((0, 0), (20, 0)))]
                 ]
         self.__window_menu_lista_reservas = sg.Window('RESERVAS', size=(800, 450), element_justification="c").Layout(layout)
+
+    def abrir_tela_check_in(self, reserva, hospedes):
+        #TODO PEGAR DADOS DE QUARTO E ETC
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text(
+                f"Check-in no quarto {reserva.quarto.numero} - capacidade para {reserva.quarto.capacidade} pessoas.")]]
+        for i in range(len(hospedes)):
+            layout.append([sg.Text(f"Hóspede {i+1}: {hospedes[i].nome}({hospedes[i].cpf})")])
+        if len(hospedes) < reserva.quarto.capacidade:
+            layout.append([sg.Text(f"Adicionar outro, inserir CPF:"), sg.Input(key="cpf"),  sg.Button('+', key="add_hospede")])
+        layout.append([sg.Button('Confirmar', key="check-in")])
+        layout.append([sg.Button('Cancelar', key=0)])
+
+        self.__windows_menu_check_in = sg.Window('MENU CHECK-IN', size=(800, 450), element_justification="c").Layout(
+            layout)
 
     def opçoes_menu_lista_reservas(self, lista, cores):
         self.menu_lista_reservas(lista, cores)
@@ -124,7 +141,6 @@ class TelaReserva():
 
             return button, values
 
-
     def opçoes_menu_reserva_hoje_ocupado(self, reserva):
         self.menu_reserva_hoje_ocupado(reserva)
             
@@ -154,22 +170,6 @@ class TelaReserva():
             return button, values
 
         return button, values
-
-    def abrir_tela_check_in(self, reserva, hospedes):
-        #TODO PEGAR DADOS DE QUARTO E ETC
-        sg.ChangeLookAndFeel('Reddit')
-        layout = [
-            [sg.Text(
-                f"Check-in no quarto {reserva.quarto.numero} - capacidade para {reserva.quarto.capacidade} pessoas.")]]
-        for i in range(len(hospedes)):
-            layout.append([sg.Text(f"Hóspede {i+1}: {hospedes[i].nome}({hospedes[i].cpf})")])
-        if len(hospedes) < reserva.quarto.capacidade:
-            layout.append([sg.Text(f"Adicionar outro, inserir CPF:"), sg.Input(key="cpf"),  sg.Button('+', key="add_hospede")])
-        layout.append([sg.Button('Confirmar', key="check-in")])
-        layout.append([sg.Button('Cancelar', key=0)])
-
-        self.__windows_menu_check_in = sg.Window('MENU CHECK-IN', size=(800, 450), element_justification="c").Layout(
-            layout)
 
     def opçoes_reservar(self, quarto, dia, retornar=False):
         if retornar == False:
