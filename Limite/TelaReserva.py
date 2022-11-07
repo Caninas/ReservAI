@@ -120,8 +120,8 @@ class TelaReserva():
         return button, values
 
     def menu_check_in(self, reserva, hospedes):
+        self.abrir_tela_check_in(reserva, hospedes)
         while True:
-            self.abrir_tela_check_in(reserva, hospedes)
 
             button, values = self.__windows_menu_check_in.Read()
 
@@ -134,7 +134,7 @@ class TelaReserva():
                 if valor == "" or valor == None:
                     vazio = True
                     break
-            if 'add_hospede' in values.keys():
+            if button == "add_hospede":
                 if vazio == True or not values["cpf"].isnumeric():
                     self.msg("Todos os campos devem ser preenchidos corretamente!")
                     continue
