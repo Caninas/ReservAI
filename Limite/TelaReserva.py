@@ -177,7 +177,7 @@ class TelaReserva():
     def opçoes_menu_reserva_outro_ocupado(self, reserva):
         self.menu_reserva_outro_ocupado(reserva)
             
-        button, values = self.__windows_menu_reserva_outro_reservado.Read()
+        button, values = self.__windows_menu_reserva_outro_ocupado.Read()
 
         if button == None or button == 0 or button == sg.WIN_CLOSED:
             return button, values
