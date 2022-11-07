@@ -9,7 +9,7 @@ class TelaReserva():
         sg.ChangeLookAndFeel('Reddit')
         layout = [
             [sg.Text('Digite o CPF do Hóspede principal: ', font=("Arial", 15)), sg.Input(key="cpf")],
-            [sg.Text(f"Quarto {quarto}")],
+            [sg.Text(f"Quarto {quarto}", font=("Arial", 15))],
             [sg.Text('Data de Entrada: '), sg.Input(dia, key='data_entrada',size=(20,1)), sg.CalendarButton('Abrir Calendário', title='Selecione a data de entrada', no_titlebar=False, format='%d-%m-%y', close_when_date_chosen=False, target='data_entrada', month_names=('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'), day_abbreviations=('S', 'T', 'Q', 'Q', 'S', 'S', 'D'))],
             [sg.Text('Data de Saída: '), sg.Input(key='data_saida', size=(20,1)), sg.CalendarButton('Abrir Calendário', title='Selecione a data de saída', no_titlebar=False, format='%d-%m-%y', close_when_date_chosen=False, target='data_saida', month_names=('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'), day_abbreviations=('S', 'T', 'Q', 'Q', 'S', 'S', 'D'))],
             
@@ -85,13 +85,18 @@ class TelaReserva():
                 ]
         self.__window_menu_lista_reservas = sg.Window('RESERVAS', size=(800, 450), element_justification="c").Layout(layout)
 
-    def menu_cancelar(self):
+    def menu_cancelar(self, multa=None):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
             [sg.Text("Deseja mesmo excluir esta reserva?")],      
             [sg.Button('Sim', key=1), sg.Button('Não', key=0)]
         ]
-        self.__window_cancelar = sg.Window('CANCELAR', element_justification="c").Layout(layout)
+        layout_multa = [
+            [sg.Text(f"O período de cancelamento passou.\nMulta: {multa} reais.")],      
+            [sg.Button('Confirmar Pagamento', key=1)]
+        ]
+        self.__window_cancelar = sg.Window('EXCLUIR', element_justification="c").Layout(layout)
+        self.__window_cancelar_multa = sg.Window('EXCLUIR', element_justification="c").Layout(layout_multa)
 
     def abrir_tela_check_in(self, reserva, hospedes):
         #TODO PEGAR DADOS DE QUARTO E ETC
@@ -215,11 +220,17 @@ class TelaReserva():
 
             return button, values
 
-    def opçao_cancelar(self):
-        self.menu_cancelar()
+    def opçao_cancelar(self, multa=None):
+        self.menu_cancelar(multa)
+        if multa != None:
+            opçao, valores = self.__window_cancelar_multa.Read()
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
+                return opçao, valores
 
         opçao, valores = self.__window_cancelar.Read()
         self.__window_cancelar.close()
+        self.__window_cancelar_multa.close()
+
         return opçao, valores
         
         

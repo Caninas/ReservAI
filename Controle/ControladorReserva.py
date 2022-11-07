@@ -3,8 +3,9 @@ from Entidade.ReservaQuarto import ReservaQuarto
 from Entidade.Quarto import Quarto
 from Persistencia.DAOquarto import DAOquarto   # temporario para testes
 from Persistencia.DAOreserva_barco import DAOreserva_barco
-import PySimpleGUI as sg
 from datetime import datetime as dt
+
+import PySimpleGUI as sg
 
 
 class ControladorReserva:
@@ -201,27 +202,27 @@ class ControladorReserva:
                     hoje = dt.today().date()
                     if inicio <= hoje:
                         multa = 600 + (hoje - inicio).days * 600
-                        self.__tela_reserva.msg(f"O período de cancelamento passou.\nMulta: {multa} reais.")     #! COLOCAR CONFIRMAÇÃO DE PAGAMENTO 
 
-                    opçao, valores = self.__tela_reserva.opçao_cancelar()
+                    opçao, valores = self.__tela_reserva.opçao_cancelar(multa)
                     if opçao == 1:
                         self.reservas.remove(reserva)
                         self.__reserva_dao.atualizar()
                         self.__tela_reserva.msg(f"Reserva cancelada!")
+
                     return 1
 
 
-    def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
+    def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao) e dia selecionado)
         lista_opçoes = {"reservar": self.realizar_reserva, "excluir": self.excluir_reserva,
                         "check-in": self.check_in , "check-out": self.checkout}
         
         while True:
-            for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
+            for i in self.__reserva_dao.get_all():                        
                 print(i.quarto.numero, i.data_entrada, i.data_saida)   
             reserva = self.getReservadoDia(botao, dia)
 
             print(reserva)
-            if reserva:              #checkin e checkout aqui
+            if reserva:
                 if dia == dt.today().date():
                     if reserva.status == 1:
                         opçao, valores = self.__tela_reserva.opçoes_menu_reserva_hoje_reservado(reserva)
