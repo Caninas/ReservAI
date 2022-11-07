@@ -39,7 +39,7 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Finalizar Reserva (checkout)', key="chekout")],
+            [sg.Button('Finalizar Reserva (checkout)', key="check-out")],
             [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_hoje_ocupado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
@@ -128,8 +128,8 @@ class TelaReserva():
         return button, values
 
     def menu_check_in(self, reserva, hospedes):
+        self.abrir_tela_check_in(reserva, hospedes)
         while True:
-            self.abrir_tela_check_in(reserva, hospedes)
 
             button, values = self.__windows_menu_check_in.Read()
 
@@ -142,7 +142,7 @@ class TelaReserva():
                 if valor == "" or valor == None:
                     vazio = True
                     break
-            if 'cpf' in values.keys():
+            if button == "add_hospede":
                 if vazio == True or not values["cpf"].isnumeric():
                     self.msg("Todos os campos devem ser preenchidos corretamente!")
                     continue
@@ -232,11 +232,35 @@ class TelaReserva():
     def close_menu_reserva_hoje_reservado(self):
         self.__windows_menu_reserva_hoje_reservado.Close()
 
+    def abrir_tela_check_out(self, reserva, valor):
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text(f"Check-out do quarto {reserva.quarto.numero}")],
+            [sg.Text(f"O valor total da reserva foi R${valor}")]]
+        layout.append([sg.Button('Confirmar pagamento', key="check-out")])
+        layout.append([sg.Button('Cancelar', key=0)])
+
+        self.__windows_menu_check_out = sg.Window('MENU CHECK-OUT', size=(800, 450), element_justification="c").Layout(
+            layout)
+
+    def menu_check_out(self, reserva, valor):
+        
+        self.abrir_tela_check_out(reserva, valor)
+        button, values = self.__windows_menu_check_out.Read()
+
+        if button == None or button == 0 or button == sg.WIN_CLOSED:
+            return button, values
+
+        return button, values
+
     def close_menu_reserva_hoje_ocupado(self):
         self.__windows_menu_reserva_hoje_ocupado.Close()
 
     def close_menu_check_in(self):
         self.__windows_menu_check_in.Close()
+
+    def close_menu_check_out(self):
+        self.__windows_menu_check_out.Close()
 
     def close_menu_reserva_outro_reservado(self):
         self.__windows_menu_reserva_outro_reservado.Close()

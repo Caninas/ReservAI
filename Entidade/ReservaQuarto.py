@@ -77,5 +77,9 @@ class ReservaQuarto:
     def data_checkout(self):
         return self.__data_checkout
 
+    @property
+    def list_reservabarco(self):
+        return self.__list_reservabarco
+
     def add_reserva_barco(self, reserva_barco):
         self.__list_reservabarco.append(reserva_barco)
