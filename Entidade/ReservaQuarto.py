@@ -14,7 +14,7 @@ class ReservaQuarto:
         self.__data_reserva = data_reserva
         self.__data_entrada = data_entrada
         self.__data_saida = data_saida
-
+        self.__list_reservabarco = []
         self.__data_checkin = data_checkin
         self.__data_checkout = data_checkout
         self.__valor = valor                        # funçao(quarto.valor * calculo data) valor_total?
@@ -26,7 +26,8 @@ class ReservaQuarto:
                 "l_hospedes": self.__lista_hospedes,
                 "data_reserva": self.__data_reserva,
                 "data_entrada": self.__data_entrada,
-                "data_saida": self.__data_saida}
+                "data_saida": self.__data_saida,
+                "lista_barco": self.__list_reservabarco}
 
     @property
     def cod(self):
@@ -76,3 +77,5 @@ class ReservaQuarto:
     def data_checkout(self):
         return self.__data_checkout
 
+    def add_reserva_barco(self, reserva_barco):
+        self.__list_reservabarco.append(reserva_barco)

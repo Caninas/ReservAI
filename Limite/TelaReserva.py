@@ -26,7 +26,8 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Check-in', key="check-in"), sg.Button('Editar Reserva', key="editar"), sg.Button('Excluir Reserva', key="excluir")]
+            [sg.Button('Check-in', key="check-in"), sg.Button('Editar Reserva', key="editar"), sg.Button('Excluir Reserva', key="excluir")],
+            [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_hoje_reservado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
 
@@ -38,7 +39,8 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Editar Reserva', key="editar"), sg.Button('Finalizar Reserva (checkout)', key="chekout")]
+            [sg.Button('Editar Reserva', key="editar"), sg.Button('Finalizar Reserva (checkout)', key="chekout")],
+            [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_hoje_ocupado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
 
@@ -50,7 +52,8 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Editar Reserva', key="editar"), sg.Button('Excluir Reserva', key="excluir")]
+            [sg.Button('Editar Reserva', key="editar"), sg.Button('Excluir Reserva', key="excluir")],
+            [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_outro_reservado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
 
@@ -62,9 +65,32 @@ class TelaReserva():
             [sg.Text(f'Data de Entrada: {reserva.data_entrada}')],
             [sg.Text(f'Data de Saída: {reserva.data_saida}')],
             
-            [sg.Button('Voltar', key="voltar")]
+            [sg.Button('Voltar', key=0)]
         ]
         self.__windows_menu_reserva_outro_ocupado = sg.Window('MENU RESERVA', size=(800, 450), element_justification="c").Layout(layout)
+    
+    def menu_lista_reservas(self, lista, cores):
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text('RESERVAS', font=("Arial", 20))],
+            [sg.Table(values=lista,  key="playlist",
+                         num_rows=17,
+                         headings=["Código", "Quarto", "Data Entrada", "Data Saída", "Hóspede"],
+                         justification="c",
+                         pad=((0, 0), (20, 0))
+                         )
+            ],
+            [sg.Button("Voltar", key=0, pad=((0, 0), (20, 0)))]
+                ]
+        self.__window_menu_lista_reservas = sg.Window('RESERVAS', size=(800, 450), element_justification="c").Layout(layout)
+
+    def opçoes_menu_lista_reservas(self, lista, cores):
+        self.menu_lista_reservas(lista, cores)
+
+        button, values = self.__window_menu_lista_reservas.Read()
+        if button is None:
+            button = 0
+        return button, values
 
     def opçoes_menu_reserva_hoje_reservado(self, reserva):
         self.menu_reserva_hoje_reservado(reserva)
@@ -184,6 +210,9 @@ class TelaReserva():
     def close_menu_reservar(self):
         self.__windows_menu_reservar.Close()
 
+    def close_menu_lista_reservas(self):
+        self.__window_menu_lista_reservas.Close()
+        
     def close_menu_reserva_hoje_reservado(self):
         self.__windows_menu_reserva_hoje_reservado.Close()
 

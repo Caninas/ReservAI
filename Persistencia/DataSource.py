@@ -6,7 +6,7 @@ class DataSource:
     __instance = None       
     def __init__(self):
         self.__arquivo = f"{Path.home()}\Documents\ReservAI.pkl"     #universializar path para o user (mudar?)
-        self.__cache = {"gerente":[], "funcionarios":[], "hospedes":[], "reservas": []}
+        self.__cache = {"gerente":[], "funcionarios":[], "hospedes":[], "reservas": [], "reservas_barcos": [], "barcos": []}
 
         try:
             self.abrir()
@@ -39,5 +39,5 @@ class DataSource:
 
 
     def apagar(self):
-        self.__cache = {"gerente":[], "funcionarios":[], "hospedes":[]}
+        self.__cache = {"gerente":[], "funcionarios":[], "hospedes":[], "reservas_barcos": [], "barcos": []}
         pickle.dump(self.__cache, open(self.__arquivo, "wb"))
