@@ -85,6 +85,14 @@ class TelaReserva():
                 ]
         self.__window_menu_lista_reservas = sg.Window('RESERVAS', size=(800, 450), element_justification="c").Layout(layout)
 
+    def menu_cancelar(self):
+        sg.ChangeLookAndFeel('Reddit')
+        layout = [
+            [sg.Text("Deseja mesmo excluir esta reserva?")],      
+            [sg.Button('Sim', key=1), sg.Button('Não', key=0)]
+        ]
+        self.__window_cancelar = sg.Window('CANCELAR', element_justification="c").Layout(layout)
+
     def abrir_tela_check_in(self, reserva, hospedes):
         #TODO PEGAR DADOS DE QUARTO E ETC
         sg.ChangeLookAndFeel('Reddit')
@@ -207,6 +215,14 @@ class TelaReserva():
 
             return button, values
 
+    def opçao_cancelar(self):
+        self.menu_cancelar()
+
+        opçao, valores = self.__window_cancelar.Read()
+        self.__window_cancelar.close()
+        return opçao, valores
+        
+        
     def close_menu_reservar(self):
         self.__windows_menu_reservar.Close()
 

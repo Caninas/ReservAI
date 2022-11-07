@@ -58,20 +58,20 @@ class ControladorReserva:
     def checar_data_livre(self, n_quarto, valores):
         livre = True
         for reserva in self.reservas:
-            if reserva.quarto.numero == n_quarto:
-                inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y")
-                fim = dt.strptime(reserva.data_saida, "%d-%m-%y")
+            if reserva.quarto.numero == n_quarto and reserva.status != 0:
+                inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y").date()
+                fim = dt.strptime(reserva.data_saida, "%d-%m-%y").date()
 
-                if inicio <= dt.strptime(valores['data_entrada'], "%d-%m-%y") < fim:
+                if inicio <= dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < fim:
                     livre = False
                     break
-                if inicio < dt.strptime(valores['data_saida'], "%d-%m-%y") < fim:
+                if inicio < dt.strptime(valores['data_saida'], "%d-%m-%y").date() < fim:
                     livre = False
                     break
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < inicio <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
+                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
                     livre = False
                     break
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y") < fim <= dt.strptime(valores['data_saida'], "%d-%m-%y"):
+                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < fim <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
                     livre = False
                     break
 
@@ -118,9 +118,6 @@ class ControladorReserva:
                 return 1
             retornar = True
 
-    def excluir_reserva(self, n_quarto):
-        print("excluir")
-        pass
 
     def finalizar_check_in(self, reserva, hospedes):
         for hospede in hospedes:
@@ -184,6 +181,26 @@ class ControladorReserva:
         button, values = self.__tela_reserva.opçoes_menu_lista_reservas(lista, cores)
         self.__tela_reserva.close_menu_lista_reservas()
 
+    def excluir_reserva(self, n_quarto, dia_selecionado):
+        print(dia_selecionado)
+
+        for reserva in self.reservas:
+            if reserva.quarto.numero == n_quarto:
+                if dt.strptime(reserva.data_entrada, "%d-%m-%y").date() <= dia_selecionado <= dt.strptime(reserva.data_saida, "%d-%m-%y").date():
+                    inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y").date()
+                    hoje = dt.today().date()
+                    if inicio <= hoje:
+                        multa = 600 + (dia_selecionado - inicio).days * 600
+                        self.__tela_reserva.msg(f"O período de cancelamento passou.\nMulta: {multa} reais")
+
+                    opçao, valores = self.__tela_reserva.opçao_cancelar()
+                    if opçao == 1:
+                        self.reservas.remove(reserva)
+                        self.__reserva_dao.atualizar()
+                        self.__tela_reserva.msg(f"Reserva cancelada!")
+                    return 1
+
+
     def abre_tela(self, botao, dia):                 # clica quarto mapa (recebe numero dele aqui (botao))
         lista_opçoes = {"reservar": self.realizar_reserva, "excluir": self.excluir_reserva,
                         "check-in": self.check_in , "checkout": print("self.checkout")}
@@ -219,9 +236,12 @@ class ControladorReserva:
                 break
 
             if opçao == "excluir":      # e checkin checkout
-                lista_opçoes[opçao](botao)
-            elif opçao in  ['checkout', 'check-in']:
-                lista_opçoes[opçao](reserva)
+                if lista_opçoes[opçao](botao, dia) == 1:
+                    break
+
+            elif opçao in ['checkout', 'check-in']:
+                if lista_opçoes[opçao](reserva) == 0:
+                    break
 
 
 
