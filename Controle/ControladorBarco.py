@@ -1,4 +1,4 @@
-from Persistencia.DAObarco import DAObraco
+from Persistencia.DAObarco import DAObarco
 from Persistencia.DAOreserva_barco import DAOreserva_barco
 from Persistencia.DAOreserva import DAOreserva
 from Limite.TelaBarco import TelaBarco

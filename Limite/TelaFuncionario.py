@@ -8,12 +8,12 @@ class TelaFuncionario():
     @property
     def window_menu(self):
         return self.__window_menu
-
+        
     def menu(self, cores, data="00/00/00"):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
             [sg.Text('MENU', font=("Arial", 20)), sg.Button("Sair", key="deslogar", pad=((640, 0),(10,0)))],
-            [sg.Button('Menu Hóspede', key="menu_hospede")],
+            [sg.Button('Menu Hóspede', key="menu_hospede"),  sg.Button('Menu barco', key="menu_barco")],
             [sg.Button('Listar Reservas', key="listar_reservas")],
 
             [sg.Button("Dia anterior", key="se", pad=((0, 15), (30, 0))), sg.Text(f"{data}", font=("Arial", 13), key="data", pad=((0, 0), (30, 0))),sg.Button("Próximo dia", key="sd", pad=((15, 0), (30, 0)))],
@@ -28,7 +28,6 @@ class TelaFuncionario():
     def opçoes_menu(self, data, cores, refresh=False):
         if refresh == False:
             self.menu(cores, data)
-            
         button, values = self.__window_menu.Read()
         if button is None:
             button = 0

@@ -7,11 +7,12 @@ from datetime import timedelta
 
 
 class ControladorGerente:
-    def __init__(self, controlador_sistema, controlador_hospede, controlador_reserva, dao_gerente, dao_funcionario, cript):
+    def __init__(self, controlador_sistema, controlador_hospede, controlador_reserva, dao_gerente, dao_funcionario, cript, controlador_barco):
         self.__gerente_dao = dao_gerente
         self.__controlador_sistema = controlador_sistema
         self.__controlador_hospede = controlador_hospede
         self.__controlador_reserva = controlador_reserva
+        self.__controlador_barco = controlador_barco
         self.__fernet = cript
 
         self.__dia_selecionado = dt.today().date()
@@ -129,13 +130,14 @@ class ControladorGerente:
         lista_opçoes = {"menu_funcionario": self.menu_funcionario,
                         "menu_hospede": self.__controlador_hospede.abre_tela, 
                         "reservar": self.__controlador_reserva.abre_tela,
-                        "listar_reservas": self.__controlador_reserva.listar_reservas}
+                        "listar_reservas": self.__controlador_reserva.listar_reservas,
+                        "menu_barco": self.__controlador_barco.abre_tela}
 
         dia = f"{self.__dia_selecionado.day:02d}-{self.__dia_selecionado.month:02d}-{self.__dia_selecionado.year%100} (hoje)"
         refresh = False
 
         cores_quartos = self.__controlador_reserva.getStatusQuartos(self.__dia_selecionado)
-        
+
         while True:
             print(self.__dia_selecionado)
 
@@ -180,7 +182,7 @@ class ControladorGerente:
                 refresh = True
                 continue
 
-            if opçao == "menu_hospede" or opçao == "menu_funcionario":
+            if opçao == "menu_hospede" or opçao == "menu_funcionario" or opçao == "menu_barco":
                 self.__tela_gerente.close_menu()
                 lista_opçoes[opçao]()
             elif opçao == "listar_reservas":

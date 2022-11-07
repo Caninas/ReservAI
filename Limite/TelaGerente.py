@@ -13,7 +13,7 @@ class TelaGerente():
         sg.ChangeLookAndFeel('Reddit')
         layout = [
             [sg.Text('MENU', font=("Arial", 20)), sg.Button("Sair", key="deslogar", pad=((640, 0),(10,0)))],
-            [sg.Button('Menu Funcionário', key="menu_funcionario"), sg.Button('Menu Hóspede', key="menu_hospede")],
+            [sg.Button('Menu Funcionário', key="menu_funcionario"), sg.Button('Menu Hóspede', key="menu_hospede"), sg.Button('Menu barco', key="menu_barco")],
             [sg.Button('Listar Reservas', key="listar_reservas")],
 
             [sg.Button("Dia anterior", key="se", pad=((0, 15), (30, 0))), sg.Text(f"{data}", font=("Arial", 13), key="data", pad=((0, 0), (30, 0))),sg.Button("Próximo dia", key="sd", pad=((15, 0), (30, 0)))],
