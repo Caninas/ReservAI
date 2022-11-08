@@ -44,7 +44,7 @@ class ControladorReserva:
         for reserva_barco in self.__reserva_barco_dao.get_all():
             if reserva_barco.cod_reserva == reserva.cod:
                 if dt.strptime(reserva_barco.data_reserva, "%d-%m-%y").date() > dt.today().date():
-                    self.__reserva_barco_dao.remove(reserva_barco)
+                    reserva_barco.status = 0
                     print("apaguei", reserva_barco)
 
     def calcula_diarias(self, reserva):  
