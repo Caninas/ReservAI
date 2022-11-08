@@ -144,23 +144,25 @@ class ControladorBarco:
     def checar_data_livre(self, n_barco, valores): #verificar aqui
         livre = True
         for reserva in self.reservas_barcos:
-            if reserva.barco.numero == n_barco and reserva.status != 0:
+            print('aqui as datas')
+            print(reserva.data_reserva)
+            print(valores['data_entrada'])
+            if reserva.barco.numero == n_barco and reserva.status == 1:
                 data = dt.strptime(reserva.data_reserva, "%d-%m-%y").date()
-                reservadoquarto = self.__dao_reserva.getReservaCod(reserva.cod_reserva)
-                inicio = dt.strptime(reservadoquarto.data_entrada, "%d-%m-%y").date()
-                fim = dt.strptime(reservadoquarto.data_saida, "%d-%m-%y").date()
+                
 
                 if data == dt.strptime(valores['data_entrada'], "%d-%m-%y").date():
                     livre = False
                     break
                 
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio:
-                    livre = False
-                    break
-
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() >= fim:
-                    livre = False
-                    break
+        
+        reservadoquarto = self.__dao_reserva.getReservaCod(valores["cpf"])
+        inicio = dt.strptime(reservadoquarto.data_entrada, "%d-%m-%y").date()
+        fim = dt.strptime(reservadoquarto.data_saida, "%d-%m-%y").date()
+        if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio:
+            livre = False
+        if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() >= fim:
+            livre = False
 
         if not livre:
             self.__tela_barco.msg("A data é inválida")
