@@ -157,12 +157,13 @@ class ControladorBarco:
                 
         
         reservadoquarto = self.__dao_reserva.getReservaCod(valores["cpf"])
-        inicio = dt.strptime(reservadoquarto.data_entrada, "%d-%m-%y").date()
-        fim = dt.strptime(reservadoquarto.data_saida, "%d-%m-%y").date()
-        if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio:
-            livre = False
-        if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() >= fim:
-            livre = False
+        if reservadoquarto:
+            inicio = dt.strptime(reservadoquarto.data_entrada, "%d-%m-%y").date()
+            fim = dt.strptime(reservadoquarto.data_saida, "%d-%m-%y").date()
+            if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio:
+                livre = False
+            if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() >= fim:
+                livre = False
 
         if not livre:
             self.__tela_barco.msg("A data é inválida")
