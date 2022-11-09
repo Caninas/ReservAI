@@ -124,14 +124,14 @@ class ControladorReserva:
                 quarto = self.__controlador_quarto.getQuarto(n_quarto)
 
                 cod = self.__reserva_dao.getCodUltimaReserva() + 1
-                reserva = ReservaQuarto(cod, 1, quarto, [hospede], dt.today().date().strftime("%d-%m-%y"),                          # mesmo hospede com endereços de mem diferentes?
+                reserva = ReservaQuarto(cod, 1, quarto, [hospede], dt.today().date().strftime("%d-%m-%y"),
                                         valores["data_entrada"], valores["data_saida"])
                 self.__reserva_dao.add(reserva)
 
                 self.__tela_reserva.msg("Reserva realizada com sucesso!")
                 self.__tela_reserva.close_menu_reservar()
 
-                for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
+                for i in self.__reserva_dao.get_all():
                     print(i.info_basica())                      
                 return 1
             retomar = True
