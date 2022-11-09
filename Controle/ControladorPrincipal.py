@@ -13,6 +13,7 @@ from Controle.ControladorFuncionario import ControladorFuncionario
 from Controle.ControladorHospede import ControladorHospede
 from Controle.ControladorReserva import ControladorReserva
 from Controle.ControladorBarco import ControladorBarco
+from Controle.ControladorQuarto import ControladorQuarto
 
 from Persistencia.DAOgerente import DAOgerente
 from Persistencia.DAOfuncionario import DAOfuncionario
@@ -20,6 +21,7 @@ from Persistencia.DAOhospede import DAOhospede
 from Persistencia.DAOreserva import DAOreserva
 from Persistencia.DataSource import DataSource
 from Persistencia.DAOreserva_barco import DAOreserva_barco
+from Persistencia.DAOquarto import DAOquarto
 from Persistencia.DAObarco import DAObarco
 
 class ControladorPrincipal:
@@ -33,11 +35,13 @@ class ControladorPrincipal:
         self.__DAOgerente = DAOgerente(self.__dataSource, self.__fernet)
         self.__DAOhospede = DAOhospede(self.__dataSource)
         self.__DAOreserva = DAOreserva(self.__dataSource)
+        self.__DAOquarto = DAOquarto()
         self.__DAOfuncionario = DAOfuncionario(self.__dataSource, self.__fernet)
         self.__DAObarco = DAObarco(self.__dataSource)
         self.__DAOreserva_barco = DAOreserva_barco(self.__dataSource)
         
         self.__controlador_hospede = ControladorHospede(self, self.__DAOhospede)
+        self.__controlador_quarto = ControladorQuarto(self, self.__DAOquarto)
         self.__controlador_reserva = ControladorReserva(self, self.__controlador_hospede, self.__DAOreserva, self.__DAOreserva_barco)
         self.__controlador_barco = ControladorBarco(self, self.__DAOreserva, self.__DAObarco, self.__DAOreserva_barco)
         self.__controlador_gerente = ControladorGerente(self, self.__controlador_hospede, self.__controlador_reserva, self.__DAOgerente, self.__DAOfuncionario, self.__fernet, self.__controlador_barco)
@@ -61,7 +65,6 @@ class ControladorPrincipal:
                 self.abre_login()
 
     def encerrar_sistema(self, *args):
-
         exit(0)
 
     def valida_dados(self, dados):
@@ -71,7 +74,6 @@ class ControladorPrincipal:
         return True
 
     def abre_cadastro_gerente_primeira_vez(self):
-
         while True:
             dados_gerente = self.__tela_principal.cadastro_gerente_primeira_vez()
             if not dados_gerente:

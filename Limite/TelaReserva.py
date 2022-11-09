@@ -276,5 +276,8 @@ class TelaReserva():
     def close_menu_reserva_outro_reservado(self):
         self.__windows_menu_reserva_outro_reservado.Close()
 
+    def close_menu_reserva_outro_ocupado(self):
+        self.__windows_menu_reserva_outro_ocupado.Close()
+
     def msg(self, msg):
         sg.Popup(msg)

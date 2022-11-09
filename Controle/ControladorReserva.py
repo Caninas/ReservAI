@@ -1,6 +1,5 @@
 from Limite.TelaReserva import TelaReserva
 from Entidade.ReservaQuarto import ReservaQuarto
-from Entidade.Quarto import Quarto
 from Persistencia.DAOquarto import DAOquarto   # temporario para testes
 from Persistencia.DAOreserva_barco import DAOreserva_barco
 from datetime import datetime as dt
@@ -14,23 +13,13 @@ class ControladorReserva:
         self.__controlador_hospede = controlador_hospede
 
         self.__reserva_dao = dao_reserva
-        self.__quarto_dao = DAOquarto()      # temporario para testes
         self.__tela_reserva = TelaReserva()
         self.__reserva_barco_dao = dao_reserva_barco
-        self.criar_quartos()
+
 
     @property
     def reservas(self):
         return self.__reserva_dao.get_all()
-
-    def criar_quartos(self):                                                        # temporario para teste
-        if self.__quarto_dao.cache["quartos"] == []:                                
-            for i in range(1,5):
-                quarto = Quarto(i, 2, 1, 0, 500, "Quarto Casal (2 lugares)", 0)
-                self.__quarto_dao.add(quarto)
-            for i in range(5,9):
-                quarto = Quarto(i, 4, 1, 2, 1000, "Quarto Familia (4 lugares)", 0)
-                self.__quarto_dao.add(quarto)
 
     def calcula_passeio(self, reserva):
         passeios = 0
@@ -123,7 +112,7 @@ class ControladorReserva:
                     if hospede == None:
                         return
 
-                quarto = self.__quarto_dao.getQuarto(n_quarto)
+                quarto = self.__controlador_quarto.getQuarto(n_quarto)
 
                 cod = self.__reserva_dao.getCodUltimaReserva() + 1
                 reserva = ReservaQuarto(cod, 1, quarto, [hospede], "10-07-22",                          # mesmo hospede com endereços de mem diferentes?
