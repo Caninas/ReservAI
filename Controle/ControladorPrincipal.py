@@ -1,5 +1,3 @@
-
-#TODO FAZER IMPORTS
 import PySimpleGUI as sg
 
 from cryptography.fernet import Fernet
@@ -24,6 +22,7 @@ from Persistencia.DAOreserva_barco import DAOreserva_barco
 from Persistencia.DAOquarto import DAOquarto
 from Persistencia.DAObarco import DAObarco
 
+
 class ControladorPrincipal:
     def __init__(self):
         self.__fernet = Fernet(b'DqaysoWHxzFAoi4ZUM5GeMYZitArP5lBiGOUEooEgwk=')
@@ -42,7 +41,7 @@ class ControladorPrincipal:
         
         self.__controlador_hospede = ControladorHospede(self, self.__DAOhospede)
         self.__controlador_quarto = ControladorQuarto(self, self.__DAOquarto)
-        self.__controlador_reserva = ControladorReserva(self, self.__controlador_hospede, self.__DAOreserva, self.__DAOreserva_barco)
+        self.__controlador_reserva = ControladorReserva(self, self.__controlador_hospede, self.__controlador_quarto, self.__DAOreserva, self.__DAOreserva_barco)
         self.__controlador_barco = ControladorBarco(self, self.__DAOreserva, self.__DAObarco, self.__DAOreserva_barco)
         self.__controlador_gerente = ControladorGerente(self, self.__controlador_hospede, self.__controlador_reserva, self.__DAOgerente, self.__DAOfuncionario, self.__fernet, self.__controlador_barco)
         self.__controlador_funcionario = ControladorFuncionario(self, self.__controlador_hospede, self.__controlador_reserva, self.__DAOfuncionario, self.__fernet, self.__controlador_barco)

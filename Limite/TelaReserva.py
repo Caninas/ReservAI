@@ -184,8 +184,8 @@ class TelaReserva():
 
         return button, values
 
-    def opçoes_reservar(self, quarto, dia, retornar=False):
-        if retornar == False:
+    def opçoes_reservar(self, quarto, dia, retomar=False):
+        if retomar == False:
             self.menu_reservar(quarto, dia)
         while True:
             button, values = self.__windows_menu_reservar.Read()

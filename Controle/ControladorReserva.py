@@ -1,6 +1,5 @@
 from Limite.TelaReserva import TelaReserva
 from Entidade.ReservaQuarto import ReservaQuarto
-from Persistencia.DAOquarto import DAOquarto   # temporario para testes
 from Persistencia.DAOreserva_barco import DAOreserva_barco
 from datetime import datetime as dt
 
@@ -8,11 +7,12 @@ import PySimpleGUI as sg
 
 
 class ControladorReserva:
-    def __init__(self, controlador_sistema, controlador_hospede, dao_reserva, dao_reserva_barco):
+    def __init__(self, controlador_sistema, controlador_hospede, controlador_quarto, dao_reserva, dao_reserva_barco):
         self.__controlador_sistema = controlador_sistema
         self.__controlador_hospede = controlador_hospede
 
-        self.__reserva_dao = dao_reserva
+        self.__reserva_dao = dao_reserva 
+        self.__controlador_quarto = controlador_quarto
         self.__tela_reserva = TelaReserva()
         self.__reserva_barco_dao = dao_reserva_barco
 
@@ -63,23 +63,33 @@ class ControladorReserva:
             return 1
             
 
-    def checar_data_livre(self, n_quarto, valores):
+    def checar_data_disponivel(self, n_quarto, valores):
+        if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() >= dt.strptime(valores['data_saida'], "%d-%m-%y").date():    # teste entre datas
+            self.__tela_reserva.msg("A data de entrada não pode ser depois ou igual a data de saída!")
+            return 0
+        elif dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < dt.today().date():
+            self.__tela_reserva.msg("A data de entrada não pode ser antes de hoje!")
+            return 0
+        elif dt.strptime(valores['data_saida'], "%d-%m-%y").date() < dt.today().date():
+            self.__tela_reserva.msg("A data de saída não pode ser antes de hoje!")
+            return 0
+
         livre = True
         for reserva in self.reservas:
-            if reserva.quarto.numero == n_quarto and reserva.status != 0:
+            if reserva.quarto.numero == n_quarto and reserva.status != 0:               # teste datas vs datas de reservas
                 inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y").date()
                 fim = dt.strptime(reserva.data_saida, "%d-%m-%y").date()
 
                 if inicio <= dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < fim:
                     livre = False
                     break
-                if inicio < dt.strptime(valores['data_saida'], "%d-%m-%y").date() < fim:
+                elif inicio < dt.strptime(valores['data_saida'], "%d-%m-%y").date() < fim:
                     livre = False
                     break
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
+                elif dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
                     livre = False
                     break
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < fim <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
+                elif dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < fim <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
                     livre = False
                     break
 
@@ -91,18 +101,18 @@ class ControladorReserva:
 
     def realizar_reserva(self, n_quarto, dia):
         print(dia)
-        retornar = False
+        retomar = False
         dia = f"{dia.day:02d}-{dia.month:02d}-{dia.year%100}"
 
         while True:
-            opçao, valores = self.__tela_reserva.opçoes_reservar(n_quarto, dia, retornar)
+            opçao, valores = self.__tela_reserva.opçoes_reservar(n_quarto, dia, retomar)
             print(opçao,valores)
             
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_reserva.close_menu_reservar()
                 return
 
-            if self.checar_data_livre(n_quarto, valores):
+            if self.checar_data_disponivel(n_quarto, valores):
                 hospede = self.__controlador_hospede.buscar_hospede(valores["cpf"])
 
                 if not hospede:    # não existe
@@ -114,7 +124,7 @@ class ControladorReserva:
                 quarto = self.__controlador_quarto.getQuarto(n_quarto)
 
                 cod = self.__reserva_dao.getCodUltimaReserva() + 1
-                reserva = ReservaQuarto(cod, 1, quarto, [hospede], "10-07-22",                          # mesmo hospede com endereços de mem diferentes?
+                reserva = ReservaQuarto(cod, 1, quarto, [hospede], dt.today().date().strftime("%d-%m-%y"),                          # mesmo hospede com endereços de mem diferentes?
                                         valores["data_entrada"], valores["data_saida"])
                 self.__reserva_dao.add(reserva)
 
@@ -124,7 +134,7 @@ class ControladorReserva:
                 for i in self.__reserva_dao.get_all():                              # mesmo quarto com endereços de mem diferentes?
                     print(i.info_basica())                      
                 return 1
-            retornar = True
+            retomar = True
 
 
     def finalizar_check_in(self, reserva, hospedes):
@@ -236,7 +246,10 @@ class ControladorReserva:
                         self.__tela_reserva.close_menu_reserva_outro_ocupado()
 
             else:
-                self.realizar_reserva(botao, dia)
+                if dia >= dt.today().date():
+                    self.realizar_reserva(botao, dia)
+                else:
+                    self.__tela_reserva.msg("Não é possível reservar em datas passadas")
                 break
 
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
