@@ -26,7 +26,7 @@ class TelaBarco:
             [sg.Button("Dia anterior", key="se", pad=((0, 15), (30, 0))), sg.Text(f"{data}", font=("Arial", 13), key="data", pad=((0, 0), (30, 0))),sg.Button("Próximo dia", key="sd", pad=((15, 0), (30, 0)))],
 
             [sg.Button('BARCO 1', key=1, pad=((0, 30),(70,0))), sg.Button('BARCO 2', key=2, pad=((0, 30),(70,0))), sg.Button('BARCO 3', key=3, pad=((0, 30),(70,0)))],
-            [sg.Text("          ", key="c1", background_color=cores[0], pad=((0, 61),(0,0))), sg.Text("          ", key="c2", background_color=cores[1], pad=((0, 61),(0,0))), sg.Text("          ", key="c3", background_color=cores[2], pad=((0, 61),(0,0)))],
+            [sg.Text("          ", key="c1", background_color=cores[0], pad=((0, 60),(0,0))), sg.Text("          ", key="c2", background_color=cores[1], pad=((0, 50),(0,0))), sg.Text("          ", key="c3", background_color=cores[2], pad=((0, 40),(0,0)))],
             [sg.Button("Voltar", key="voltar", pad=((0, 0), (20, 0)))]   
                 ]
         self.__window_menu = sg.Window('MENU', size=(800, 450), element_justification="c").Layout(layout)

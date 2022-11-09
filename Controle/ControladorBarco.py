@@ -144,30 +144,28 @@ class ControladorBarco:
     def checar_data_livre(self, n_barco, valores): #verificar aqui
         livre = True
         for reserva in self.reservas_barcos:
-            if reserva.barco.numero == n_barco and reserva.status != 0:
+            print('aqui as datas')
+            print(reserva.data_reserva)
+            print(valores['data_entrada'])
+            if reserva.barco.numero == n_barco and reserva.status == 1:
                 data = dt.strptime(reserva.data_reserva, "%d-%m-%y").date()
-                reservadoquarto = self.__dao_reserva.getReservaCod(reserva.cod_reserva)
-                inicio = dt.strptime(reservadoquarto.data_entrada, "%d-%m-%y").date()
-                fim = dt.strptime(reservadoquarto.data_saida, "%d-%m-%y").date()
+                
 
                 if data == dt.strptime(valores['data_entrada'], "%d-%m-%y").date():
                     livre = False
                     break
                 
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio:
-                    livre = False
-                    break
-
-                if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() >= fim:
-                    livre = False
-                    break
-
-                if reservadoquarto.status != 2:
-                    livre = False
-                    break
+        
+        reservadoquarto = self.__dao_reserva.getReservaCod(valores["cpf"])
+        inicio = dt.strptime(reservadoquarto.data_entrada, "%d-%m-%y").date()
+        fim = dt.strptime(reservadoquarto.data_saida, "%d-%m-%y").date()
+        if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio:
+            livre = False
+        if dt.strptime(valores['data_entrada'], "%d-%m-%y").date() >= fim:
+            livre = False
 
         if not livre:
-            self.__tela_barco.msg("Já existe uma reserva no período selecionado ou a data é inválida")
+            self.__tela_barco.msg("A data é inválida")
             return 0
 
         return 1
@@ -193,20 +191,23 @@ class ControladorBarco:
                     self.__tela_barco.msg("reserva não encontrada")
                     return 
 
-                barco = self.__dao_barco.getBarco(n_barco)
+                if reservadoquarto.status == 2:
+                    
+                    barco = self.__dao_barco.getBarco(n_barco)
 
-                cod = self.__dao_reservabarco.getCodUltimaReservaBarco() + 1
-                reserva = Reserva_Barco(barco, cod, reservadoquarto.cod, 1,                      
-                                valores["data_entrada"], barco.valor)
-                self.__dao_reserva.remove(reservadoquarto)
-                self.__dao_reservabarco.add(reserva)
-                reservadoquarto.add_reserva_barco(reserva)
-                self.__dao_reserva.add(reservadoquarto)
+                    cod = self.__dao_reservabarco.getCodUltimaReservaBarco() + 1
+                    reserva = Reserva_Barco(barco, cod, reservadoquarto.cod, 1,                      
+                                    valores["data_entrada"], barco.valor)
+                    self.__dao_reservabarco.add(reserva)
+                    reservadoquarto.add_reserva_barco(reserva)
+                    self.__dao_reserva.atualizar()
 
-                self.__tela_barco.msg("Reserva realizada com sucesso!")
-                self.__tela_barco.close_menu_reservar()
+                    self.__tela_barco.msg("Reserva realizada com sucesso!")
+                    self.__tela_barco.close_menu_reservar()
 
-                for i in self.__dao_reservabarco.get_all():
-                    print(i.info_basica())                      
-                return 1
+                    for i in self.__dao_reservabarco.get_all():
+                        print(i.info_basica())                      
+                    return 1
+                else:
+                    self.__tela_barco.msg("Reservas de barco só serão feitas após check-in")
             retornar = True
