@@ -35,9 +35,8 @@ class ControladorReserva:
     def calcula_passeio(self, reserva):
         passeios = 0
         for reserva_barco in self.__reserva_barco_dao.get_all():
-            if reserva_barco.cod_reserva == reserva.cod:
+            if reserva_barco.cod_reserva == reserva.cod and dt.strptime(reserva_barco.data_reserva, "%d-%m-%y").date() <= dt.today().date():
                 passeios += reserva_barco.valor
-                print(reserva_barco.valor)
         return passeios
 
     def cancela_passeios(self, reserva):
@@ -45,7 +44,6 @@ class ControladorReserva:
             if reserva_barco.cod_reserva == reserva.cod:
                 if dt.strptime(reserva_barco.data_reserva, "%d-%m-%y").date() > dt.today().date():
                     self.__reserva_barco_dao.remove(reserva_barco)
-                    print("apaguei", reserva_barco)
 
     def calcula_diarias(self, reserva):  
         inicio = reserva.data_entrada
@@ -63,15 +61,15 @@ class ControladorReserva:
         return valor_total
     
     def checkout(self, reserva):
-        self.cancela_passeios(reserva)
         valor = self.calcular_valor(reserva)
         opçao, valores = self.__tela_reserva.menu_check_out(reserva, valor)
         if opçao == "check-out":
             reserva.status = 0
+            self.__reserva_dao.atualizar()
+            self.cancela_passeios(reserva)
             self.__tela_reserva.msg("Check-out realizado com sucesso!")
             self.__tela_reserva.close_menu_check_out()
             opçao = 0
-            self.__reserva_dao.atualizar()
             return 1
             
 
