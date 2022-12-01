@@ -38,7 +38,7 @@ class TelaPrincipal():
             [sg.Button('Sair', key=0)]
         ]
 
-        window = sg.Window('Cadastro de Funcionário', layout, size=(800, 450), element_justification="c")
+        window = sg.Window('Cadastro de Gerente', layout, size=(800, 450), element_justification="c")
 
         event, values = window.read()
 
