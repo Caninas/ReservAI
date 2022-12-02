@@ -154,7 +154,7 @@ class ControladorReserva:
                 if not hospede:  # não existe
                     self.__tela_reserva.msg("Hóspede com esse CPF não foi encontrado no banco dados, favor cadastrar:")
                     hospede = self.__controlador_hospede.cadastrar()
-                if hospede != None:
+                if hospede != None and hospede not in hospedes:
                     hospedes.append(hospede)
 
             elif opçao == "check-in":
