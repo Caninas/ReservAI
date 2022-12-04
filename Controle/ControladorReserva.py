@@ -79,17 +79,7 @@ class ControladorReserva:
             if reserva.quarto.numero == n_quarto and reserva.status != 0:               # teste datas vs datas de reservas
                 inicio = dt.strptime(reserva.data_entrada, "%d-%m-%y").date()
                 fim = dt.strptime(reserva.data_saida, "%d-%m-%y").date()
-
-                if inicio <= dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < fim:
-                    livre = False
-                    break
-                elif inicio < dt.strptime(valores['data_saida'], "%d-%m-%y").date() < fim:
-                    livre = False
-                    break
-                elif dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < inicio <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
-                    livre = False
-                    break
-                elif dt.strptime(valores['data_entrada'], "%d-%m-%y").date() < fim <= dt.strptime(valores['data_saida'], "%d-%m-%y").date():
+                if inicio < dt.strptime(valores['data_saida'], "%d-%m-%y").date() and fim > dt.strptime(valores['data_entrada'], "%d-%m-%y").date():
                     livre = False
                     break
 
@@ -200,7 +190,6 @@ class ControladorReserva:
 
     def excluir_reserva(self, n_quarto, dia_selecionado):
         print(dia_selecionado)
-
         for reserva in self.reservas:
             if reserva.quarto.numero == n_quarto:
                 if dt.strptime(reserva.data_entrada, "%d-%m-%y").date() <= dia_selecionado <= dt.strptime(reserva.data_saida, "%d-%m-%y").date():
@@ -208,8 +197,10 @@ class ControladorReserva:
                     hoje = dt.today().date()
                     if inicio <= hoje:
                         multa = 600 + (hoje - inicio).days * 600
-
-                    opçao, valores = self.__tela_reserva.opçao_cancelar(multa)
+                        opçao, valores = self.__tela_reserva.opçao_cancelar(multa)
+                    else:
+                        opçao, valores = self.__tela_reserva.opçao_cancelar()
+                    
                     if opçao == 1:
                         self.reservas.remove(reserva)
                         self.__reserva_dao.atualizar()
