@@ -115,6 +115,12 @@ class TelaHospedes():
             if vazio == True or not values["cpf"].isnumeric():
                 self.msg("Todos os campos devem ser preenchidos corretamente!")
                 continue
+
+            data = values["data_nascimento"].split("-")
+
+            if len(data) != 3 or any([not x.isnumeric() for x in data]) or len(data[2]) != 4:
+                self.msg("O formato da data deve ser Ex: '29-12-2001'")
+                continue
                 
             return button, values
     

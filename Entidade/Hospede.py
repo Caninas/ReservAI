@@ -1,3 +1,5 @@
+from datetime import datetime as dt
+
 class Hospede:
     def __init__(self, nome: str, cpf: str, data_nascimento: str, telefone: str,
                  email: str, sexo: str, nacionalidade: str, end_rua: str, end_num: str,
@@ -77,3 +79,9 @@ class Hospede:
     @property
     def end_pais(self):
         return self.__end_pais
+
+    @property
+    def idade(self):
+        hoje = dt.today()
+        nascimento = dt.strptime(self.__data_nascimento, "%d-%m-%Y")
+        return (hoje.year - nascimento.year) - ((hoje.month, hoje.day) < (nascimento.month, nascimento.day))
