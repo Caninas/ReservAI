@@ -1,8 +1,10 @@
+from pathlib import Path
+
 from Limite.TelaRelatorio import TelaRelatorio
 from datetime import datetime as dt
 
 import PySimpleGUI as sg
-
+import pandas as pd
 
 class ControladorRelatorio:
     def __init__(self, controlador_sistema, controlador_reserva, controlador_hospede, controlador_barco):
@@ -16,7 +18,9 @@ class ControladorRelatorio:
 
     def relatorioReservas(self):
         update = False
-
+        data_i = None
+        data_f = None
+        dados = None
         while True:
             opçao, valores = self.__tela_relatorio.opçoes_menu_rel_reservas(update)
             
@@ -25,6 +29,19 @@ class ControladorRelatorio:
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_relatorio.close_menu_rel_reservas()
                 break
+            if opçao == 'exportar':
+                data = {'total_reservas': len(dados[0]),'tempo_medio_estadia(dias)': dados[1],
+                    'ocupacao_media_diaria_quartos(%)': dados[2], 'receita_total(R$)': dados[3], 'receita_media_diaria(R$)': dados[4]}
+                df = pd.DataFrame(data, index=['valores'])
+                data_inicial = data_i.strftime("%m-%d-%Y")
+                data_final = data_f.strftime("%m-%d-%Y")
+                try:
+                    df.to_csv(f"{Path.home()}\Documents\\rel_reserva_{data_inicial}_{data_final}.csv")
+                    self.__tela_relatorio.msg("Relatorio salvo com sucesso em pasta Documents!")
+                except:
+                    self.__tela_relatorio.msg("Falha em salvar relatorio :(")
+                continue
+
 
             data_i = dt.strptime(valores['data_inicial'], '%d-%m-%y')
             data_f = dt.strptime(valores['data_final'], '%d-%m-%y')
@@ -42,7 +59,7 @@ class ControladorRelatorio:
             self.__tela_relatorio.window_menu_rel_reservas['ocupaçao_media'].update(f"Ocupação média diária dos quartos: {dados[2]:.2f}%")
             self.__tela_relatorio.window_menu_rel_reservas['receita_total'].update(f"Receita Total: R$ {dados[3]:.2f}")
             self.__tela_relatorio.window_menu_rel_reservas['receita_media_dia'].update(f"Receita média por dia: R$ {dados[4]:.2f}")
-            
+            self.__tela_relatorio.window_menu_rel_reservas['exportar'].update(disabled=False)
 
     def GerarDadosReservas(self, data_i, data_f):
         reservas = self.__controlador_reserva.reservas

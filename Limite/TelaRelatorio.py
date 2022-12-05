@@ -27,6 +27,7 @@ class TelaRelatorio:
             [sg.Text('Data Final: '), sg.Input(key='data_final', size=(20,1)), sg.CalendarButton('Abrir Calendário', title='Selecione a data do final', no_titlebar=False, format='%d-%m-%y', close_when_date_chosen=False, target='data_final', month_names=('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'), day_abbreviations=('S', 'T', 'Q', 'Q', 'S', 'S', 'D'))],
             [sg.Button("Visualizar", key=1, size=(20,1), pad=((0,0),(10,0)))],
             [sg.Button("Voltar", size=(20, 1), key=0)],
+            [sg.Button("Exportar", size=(20, 1), key='exportar', disabled=True)],
             
             [sg.Text(key="total_reservas", font=("Arial", 16), pad=((0,0),(25,0)))],
             [sg.Text(key="tempo_medio", font=("Arial", 16))],
