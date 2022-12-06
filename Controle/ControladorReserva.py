@@ -186,7 +186,16 @@ class ControladorReserva:
 
     def listar_reservas(self, dia):
         cores = [(row, cor) for row, cor in enumerate(self.getStatusQuartos(dia))]
-        lista = [[reserva.cod, "Concluída" if reserva.status == 0 else "Reservado" if reserva.status == 1 else "Ocupado", reserva.quarto.numero, reserva.data_entrada, reserva.data_saida, reserva.lista_hospedes[0].nome] for reserva in self.reservas]
+        lista = [0 for x in range(1,9)]
+
+        for reserva in self.reservas:
+            if dt.strptime(reserva.data_entrada, "%d-%m-%y").date() <= dia <= dt.strptime(reserva.data_saida, "%d-%m-%y").date():
+                lista[reserva.quarto.numero-1] = [reserva.quarto.numero, "Concluída" if reserva.status == 0 else "Reservado" if reserva.status == 1 else "Ocupado", reserva.cod, reserva.data_entrada, reserva.data_saida, reserva.lista_hospedes[0].nome]
+
+        for i, item in enumerate(lista):
+            if item == 0:
+                lista[i] = [i+1, "Livre", "", "", "", ""]
+
 
         button, values = self.__tela_reserva.opçoes_menu_lista_reservas(lista, cores)
         self.__tela_reserva.close_menu_lista_reservas()

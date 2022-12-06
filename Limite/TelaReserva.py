@@ -72,10 +72,10 @@ class TelaReserva():
     def menu_lista_reservas(self, lista, cores):
         sg.ChangeLookAndFeel('Reddit')
         layout = [
-            [sg.Text('RESERVAS', font=("Arial", 20))],
+            [sg.Text('RESERVAS DO DIA', font=("Arial", 20))],
             [sg.Table(values=lista,  key="playlist",
                          num_rows=17,
-                         headings=["Código", "Status", "Quarto", "Data Entrada", "Data Saída", "Hóspede"],
+                         headings=["Quarto", "Status", "Código", "Data Entrada", "Data Saída", "Hóspede"],
                          row_colors=cores,
                          justification="c",
                          pad=((0, 0), (20, 0))
@@ -189,17 +189,17 @@ class TelaReserva():
             self.menu_reservar(quarto, dia)
         while True:
             button, values = self.__windows_menu_reservar.Read()
-            print(values)
+
+            if button == None or button == 0 or button == sg.WIN_CLOSED:
+                return button, values
+
             values.pop("Abrir Calendário")      #tirar o campo do calendario q é inutil (e sao 2)
             values.pop("Abrir Calendário0")
 
             vazio = False
-            if button == None or button == 0 or button == sg.WIN_CLOSED:
-                return button, values
 
             for valor in values.values():
                 if valor == "" or valor == None:
-                    print(valor)
                     vazio = True
                     break
 
@@ -213,7 +213,7 @@ class TelaReserva():
 
             data1 = values["data_entrada"].split("-")
             data2 = values["data_saida"].split("-")
-            print(data1, data2)
+            
             if any([len(x) != 2 or len(data1) != 3 for x in data1]) or any([len(x) != 2 or len(data2) != 3 for x in data2]):
                 self.msg("O formato da data deve ser Ex: '29-12-22'")
                 continue
