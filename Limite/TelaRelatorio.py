@@ -8,6 +8,10 @@ class TelaRelatorio:
     @property
     def window_menu_rel_reservas(self):
         return self.__window_menu_rel_reservas
+
+    @property
+    def window_menu_rel_passeios(self):
+        return self.__window_menu_rel_passeios
         
     def menu(self):
         layout = [
@@ -71,6 +75,57 @@ class TelaRelatorio:
 
 
             return button, values
+        
+    def menu_rel_passeios(self):
+        layout = [
+            [sg.Text("Selecione o período desejado: ", font=("Arial", 15))],
+            [sg.Text('Data Inicial: '), sg.Input(key='data_inicial',size=(20,1)), sg.CalendarButton('Abrir Calendário', title='Selecione a data inicial', no_titlebar=False, format='%d-%m-%y', close_when_date_chosen=False, target='data_inicial', month_names=('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'), day_abbreviations=('S', 'T', 'Q', 'Q', 'S', 'S', 'D'))],
+            [sg.Text('Data Final: '), sg.Input(key='data_final', size=(20,1)), sg.CalendarButton('Abrir Calendário', title='Selecione a data do final', no_titlebar=False, format='%d-%m-%y', close_when_date_chosen=False, target='data_final', month_names=('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'), day_abbreviations=('S', 'T', 'Q', 'Q', 'S', 'S', 'D'))],
+            [sg.Button("Visualizar", key=1, size=(20,1), pad=((0,0),(10,0)))],
+            [sg.Button("Voltar", size=(20, 1), key=0)],
+            
+            [sg.Text(key="total_reservas", font=("Arial", 16), pad=((0,0),(25,0)))],
+            [sg.Text(key="ocupaçao_media", font=("Arial", 16))],
+            [sg.Text(key="receita_total", font=("Arial", 16))],
+            [sg.Text(key="receita_media_dia", font=("Arial", 16))],
+        ]
+        
+
+        self.__window_menu_rel_passeios = sg.Window('MENU', size=(800, 450), element_justification="c").Layout(layout)
+    
+    def opçoes_menu_rel_passeios(self, update=False):
+        if not update:
+            self.menu_rel_passeios()
+        while True:    
+            button, values = self.__window_menu_rel_passeios.Read()
+
+            if button == None or button == 0 or button == sg.WIN_CLOSED:
+                return button, values
+
+            values.pop("Abrir Calendário")      #tirar o campo do calendario q é inutil (e sao 2)
+            values.pop("Abrir Calendário0")
+
+            vazio = False
+
+            for valor in values.values():
+                if valor == "" or valor == None:
+                    print(valor)
+                    vazio = True
+                    break
+
+            if vazio == True:
+                self.msg("Todos os campos devem ser preenchidos!")
+                continue
+
+            data1 = values["data_inicial"].split("-")
+            data2 = values["data_final"].split("-")
+
+            if any([len(x) != 2 or len(data1) != 3 for x in data1]) or any([len(x) != 2 or len(data2) != 3 for x in data2]):
+                self.msg("O formato da data deve ser Ex: '29-12-22'")
+                continue
+
+
+            return button, values
 
     def opçoes_menu(self):
         self.menu()
@@ -86,6 +141,9 @@ class TelaRelatorio:
 
     def close_menu_rel_reservas(self):
         self.__window_menu_rel_reservas.Close()
+
+    def close_menu_rel_passeios(self):
+        self.__window_menu_rel_passeios.Close()
 
     def msg(self, msg):
         sg.Popup(msg)
