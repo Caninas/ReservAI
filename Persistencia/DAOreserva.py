@@ -34,10 +34,10 @@ class DAOreserva:
         return objReserva
 
     def getReserva(self, cpf):          # CPF?
-        objReserva = 0
+        objReserva = []
         for reserva in self.__cache:
             if reserva.lista_hospedes[0].cpf == int(cpf):
-                objReserva = reserva
+                objReserva.append(reserva)
 
         return objReserva
     

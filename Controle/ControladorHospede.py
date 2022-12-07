@@ -80,29 +80,30 @@ class ControladorHospede:
             self.__tela_hospede.close_busca()
             return
 
-        reserva = self.__controlador_sistema.DAOreserva.getReserva(valores["cpf"])
-        if not reserva:
-            if reserva.status != 0:
-                hospede = self.buscar_hospede(valores["cpf"])
-                self.__tela_hospede.close_busca()
-
-                if hospede == 0:
-                    self.__tela_hospede.msg("Hóspede não encontrado!")
+        reservas = self.__controlador_sistema.DAOreserva.getReserva(valores["cpf"])
+        if reservas:                 #??
+            for reserva in reservas:
+                if reserva.status != 0:
+                    self.__tela_hospede.msg("Hospede com reserva ativa")
+                    self.__tela_hospede.close_busca()
                     return
 
-                opçao, valores = self.__tela_hospede.excluir_hospede(hospede)
+        hospede = self.buscar_hospede(valores["cpf"])
+        self.__tela_hospede.close_busca()
 
-                if opçao == 0 or opçao == sg.WIN_CLOSED:
-                    self.__tela_hospede.close_excluir_hospede()
-                    return
+        if hospede == 0:
+            self.__tela_hospede.msg("Hóspede não encontrado!")
+            return
 
-                self.__hospede_dao.remove(hospede)
-                self.__tela_hospede.msg("Hospede excluído com sucesso")
-                self.__tela_hospede.close_excluir_hospede()
-        
-        else:
-            self.__tela_hospede.msg("Hospede com reserva ativa")
-            self.__tela_hospede.close_busca()
+        opçao, valores = self.__tela_hospede.excluir_hospede(hospede)
+
+        if opçao == 0 or opçao == sg.WIN_CLOSED:
+            self.__tela_hospede.close_excluir_hospede()
+            return
+
+        self.__hospede_dao.remove(hospede)
+        self.__tela_hospede.msg("Hospede excluído com sucesso")
+        self.__tela_hospede.close_excluir_hospede()
             
 
     def abre_tela(self):
