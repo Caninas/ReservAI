@@ -142,7 +142,9 @@ class ControladorRelatorio:
     
     def relatorioPasseios(self):
         update = False
-
+        data_i = None
+        data_f = None
+        dados = None
         while True:
             opçao, valores = self.__tela_relatorio.opçoes_menu_rel_passeios(update)
             
@@ -151,6 +153,19 @@ class ControladorRelatorio:
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_relatorio.close_menu_rel_passeios()
                 break
+
+            if opçao == 'exportar':
+                data = {'total_passeios': len(dados[0]),
+                    'ocupacao_media_diaria_barcos(%)': dados[1], 'receita_total(R$)': dados[2], 'receita_media_diaria(R$)': dados[3]}
+                df = pd.DataFrame(data, index=['valores'])
+                data_inicial = data_i.strftime("%m-%d-%Y")
+                data_final = data_f.strftime("%m-%d-%Y")
+                try:
+                    df.to_csv(f"{Path.home()}\Documents\\rel_passeios_{data_inicial}_{data_final}.csv")
+                    self.__tela_relatorio.msg("Relatorio salvo com sucesso em pasta Documents!")
+                except:
+                    self.__tela_relatorio.msg("Falha em salvar relatorio :(")
+                continue
 
             data_i = dt.strptime(valores['data_inicial'], '%d-%m-%y')
             data_f = dt.strptime(valores['data_final'], '%d-%m-%y')
@@ -167,7 +182,8 @@ class ControladorRelatorio:
             self.__tela_relatorio.window_menu_rel_passeios['ocupaçao_media'].update(f"Ocupação média diária dos barcos: {dados[1]:.2f}%")
             self.__tela_relatorio.window_menu_rel_passeios['receita_total'].update(f"Receita Total: R$ {dados[2]:.2f}")
             self.__tela_relatorio.window_menu_rel_passeios['receita_media_dia'].update(f"Receita média por dia: R$ {dados[3]:.2f}")
-    
+            self.__tela_relatorio.window_menu_rel_passeios['exportar'].update(disabled=False)
+
     def GerarDadosPasseios(self, data_i, data_f):
         reservas_barcos = self.__controlador_barco.reservas_barcos
         dias_totais = (data_f - data_i).days + 1    # inclusivo
