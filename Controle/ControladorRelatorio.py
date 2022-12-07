@@ -140,15 +140,7 @@ class ControladorRelatorio:
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_relatorio.close_menu_rel_hospedes()
                 break
-            self.__tela_relatorio.window_menu_rel_hospedes['total_hospedes'].update(f"Total de hóspedes: {dados[0]}")
-            self.__tela_relatorio.window_menu_rel_hospedes['idade_media'].update(f"Média de idade dos hóspedes: {dados[1]:.2f} anos")
-            self.__tela_relatorio.window_menu_rel_hospedes['sexo_masc'].update(f"Hóspedes masculinos: {dados[2]}%")
-            self.__tela_relatorio.window_menu_rel_hospedes['sexo_fem'].update(f"Hóspedes femininos: {dados[3]}%")
-            self.__tela_relatorio.window_menu_rel_hospedes['sexo_outros'].update(f"Hóspedes outros gêneros: {dados[4]}%")
-            self.__tela_relatorio.window_menu_rel_hospedes['cidade1'].update(f"1° cidade mais frequente: {dados[5]}")
-            self.__tela_relatorio.window_menu_rel_hospedes['cidade2'].update(f"2° cidade mais frequente {dados[6]}")
-            self.__tela_relatorio.window_menu_rel_hospedes['cidade3'].update(f"3° cidade mais frequente {dados[7]}")
-            self.__tela_relatorio.window_menu_rel_hospedes['exportar'].update(disabled=False)
+            
             if opçao == 'exportar':
                 data = {'total_reservas': dados[0],'media_idade_hospedes(anos)': dados[1],
                     'hospedes_masculinos(%)': dados[2], 'hospedes_femininos(%)': dados[3], 'hospedes_outros_genero($)': dados[4],
@@ -238,9 +230,9 @@ class ControladorRelatorio:
             else:
                 outros += 1
 
-        media_fem = fem / qtd_hospedes *100
-        media_masc = masc / qtd_hospedes *100
-        media_outros = outros / qtd_hospedes *100
+        media_fem = round((fem / qtd_hospedes *100),2)
+        media_masc = round((masc / qtd_hospedes *100),2)
+        media_outros = round((outros / qtd_hospedes *100),2)
         
         print (media_fem, media_masc, media_outros)
 
@@ -256,11 +248,23 @@ class ControladorRelatorio:
             qtd_cidades += 1
 
         frequencia = Counter(lista_cidades).most_common()
-        cidade_1, cidade_2, cidade_3 = frequencia[0], frequencia[1], frequencia[2]
+        print(frequencia)
+        try:
+            cidade_1, cidade_2, cidade_3 = frequencia[0], frequencia[1], frequencia[2]
+        except:
+            if len(frequencia) == 1:
+                cidade_1 = frequencia[0]
+                cidade_2 = ('Não tem', 0)
+                cidade_3 = ('Não tem', 0)
+            elif len(frequencia) == 2:
+                cidade_1 = frequencia[0]
+                cidade_2 = frequencia[1]
+                cidade_3 = ('Não tem', 0)
+                 
 
-        porc_1 = cidade_1[1] / qtd_cidades * 100
-        porc_2 = cidade_2[1] / qtd_cidades * 100
-        porc_3 = cidade_3[1] / qtd_cidades * 100
+        porc_1 = round((cidade_1[1] / qtd_cidades * 100),2)
+        porc_2 = round((cidade_2[1] / qtd_cidades * 100),2)
+        porc_3 = round((cidade_3[1] / qtd_cidades * 100),2)
 
         resultado1 = (f"{cidade_1[0]}: {porc_1}%")
         resultado2 = (f"{cidade_2[0]}: {porc_2}%")
