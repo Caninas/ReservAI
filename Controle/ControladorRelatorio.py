@@ -260,8 +260,13 @@ class ControladorRelatorio:
 
 
     def abre_tela(self):                 # clica quarto mapa (recebe numero dele aqui (botao) e dia selecionado)
+<<<<<<< HEAD
         lista_opçoes = {"rel_reservas": self.relatorioReservas, "rel_hospedes": self.relatorioHospedes,
                         "rel_passeios": print}
+=======
+        lista_opçoes = {"rel_reservas": self.relatorioReservas, "rel_hospedes": print,
+                        "rel_passeios": self.relatorioPasseios}
+>>>>>>> 9d002e22100f0bd01fa5282212b880003b6c1e9c
         
         while True:
             opçao, valores = self.__tela_relatorio.opçoes_menu()
@@ -272,6 +277,58 @@ class ControladorRelatorio:
                 break 
 
             lista_opçoes[opçao]()
+    
+    def relatorioPasseios(self):
+        update = False
+
+        while True:
+            opçao, valores = self.__tela_relatorio.opçoes_menu_rel_passeios(update)
+            
+            print(opçao, valores)
+
+            if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
+                self.__tela_relatorio.close_menu_rel_passeios()
+                break
+
+            data_i = dt.strptime(valores['data_inicial'], '%d-%m-%y')
+            data_f = dt.strptime(valores['data_final'], '%d-%m-%y')
+
+            update = True       # para a instancia da windows nao ser recriada
+
+            if data_i > data_f:
+                self.__tela_relatorio.msg("Data final não pode ser antes da data inicial!")
+                continue
+
+            dados = self.GerarDadosPasseios(data_i, data_f)
+            
+            self.__tela_relatorio.window_menu_rel_passeios['total_reservas'].update(f"Total de passeios: {len(dados[0])}")
+            self.__tela_relatorio.window_menu_rel_passeios['ocupaçao_media'].update(f"Ocupação média diária dos barcos: {dados[1]:.2f}%")
+            self.__tela_relatorio.window_menu_rel_passeios['receita_total'].update(f"Receita Total: R$ {dados[2]:.2f}")
+            self.__tela_relatorio.window_menu_rel_passeios['receita_media_dia'].update(f"Receita média por dia: R$ {dados[3]:.2f}")
+    
+    def GerarDadosPasseios(self, data_i, data_f):
+        reservas_barcos = self.__controlador_barco.reservas_barcos
+        dias_totais = (data_f - data_i).days + 1    # inclusivo
+
+        reservas_selecionadas = []
+        receita = 0
+        total_dias_reservas = 0
+
+        for reserva in reservas_barcos:
+            # se a data da reserva se sobrepoe a data selecionada
+            if dt.strptime(reserva.data_reserva, '%d-%m-%y') <= data_f and dt.strptime(reserva.data_reserva, '%d-%m-%y') >= data_i:
+
+                receita += reserva.valor
+
+                total_dias_reservas += 1
+                reservas_selecionadas.append(reserva)       # reservas no periodo
+
+        print(dias_totais)
+
+        ocupaçao_media = (total_dias_reservas / (dias_totais * 3)) * 100    # porcentagem do tempo selecionado que os quartos ficaram com reservas / ocupado
+        receita_diaria = receita / dias_totais
+
+        return [reservas_selecionadas, ocupaçao_media, receita, receita_diaria]
 
 
                 
