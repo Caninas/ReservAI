@@ -261,7 +261,7 @@ class ControladorRelatorio:
 
     def abre_tela(self):
         # clica quarto mapa (recebe numero dele aqui (botao) e dia selecionado)
-        lista_opçoes = {"rel_reservas": self.relatorioReservas, "rel_hospedes": print,
+        lista_opçoes = {"rel_reservas": self.relatorioReservas, "rel_hospedes": self.relatorioHospedes,
                         "rel_passeios": self.relatorioPasseios}
         
         while True:
