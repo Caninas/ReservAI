@@ -10,15 +10,13 @@ class TelaRelatorio:
         return self.__window_menu_rel_reservas
 
     @property
-<<<<<<< HEAD
     def window_menu_rel_hospedes(self):
         return self.__window_menu_rel_hospedes
 
-=======
+    @property
     def window_menu_rel_passeios(self):
         return self.__window_menu_rel_passeios
-        
->>>>>>> 9d002e22100f0bd01fa5282212b880003b6c1e9c
+
     def menu(self):
         layout = [
             [sg.Text("Relatórios", font=("Arial", 20))],
@@ -212,13 +210,11 @@ class TelaRelatorio:
     def close_menu_rel_reservas(self):
         self.__window_menu_rel_reservas.Close()
 
-<<<<<<< HEAD
     def close_menu_rel_hospedes(self):
         self.__window_menu_rel_hospedes.Close()
-=======
+
     def close_menu_rel_passeios(self):
         self.__window_menu_rel_passeios.Close()
->>>>>>> 9d002e22100f0bd01fa5282212b880003b6c1e9c
 
     def msg(self, msg):
         sg.Popup(msg)
