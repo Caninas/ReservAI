@@ -140,14 +140,25 @@ class ControladorRelatorio:
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_relatorio.close_menu_rel_hospedes()
                 break
+            self.__tela_relatorio.window_menu_rel_hospedes['total_hospedes'].update(f"Total de hóspedes: {dados[0]}")
+            self.__tela_relatorio.window_menu_rel_hospedes['idade_media'].update(f"Média de idade dos hóspedes: {dados[1]:.2f} anos")
+            self.__tela_relatorio.window_menu_rel_hospedes['sexo_masc'].update(f"Hóspedes masculinos: {dados[2]}%")
+            self.__tela_relatorio.window_menu_rel_hospedes['sexo_fem'].update(f"Hóspedes femininos: {dados[3]}%")
+            self.__tela_relatorio.window_menu_rel_hospedes['sexo_outros'].update(f"Hóspedes outros gêneros: {dados[4]}%")
+            self.__tela_relatorio.window_menu_rel_hospedes['cidade1'].update(f"1° cidade mais frequente: {dados[5]}")
+            self.__tela_relatorio.window_menu_rel_hospedes['cidade2'].update(f"2° cidade mais frequente {dados[6]}")
+            self.__tela_relatorio.window_menu_rel_hospedes['cidade3'].update(f"3° cidade mais frequente {dados[7]}")
+            self.__tela_relatorio.window_menu_rel_hospedes['exportar'].update(disabled=False)
             if opçao == 'exportar':
-                data = {'total_reservas': len(dados[0]),'tempo_medio_estadia(dias)': dados[1],
-                    'ocupacao_media_diaria_quartos(%)': dados[2], 'receita_total(R$)': dados[3], 'receita_media_diaria(R$)': dados[4]}
+                data = {'total_reservas': dados[0],'media_idade_hospedes(anos)': dados[1],
+                    'hospedes_masculinos(%)': dados[2], 'hospedes_femininos(%)': dados[3], 'hospedes_outros_genero($)': dados[4],
+                    'cidade_origem_mais_frequente(1)': dados[5], 'cidade_origem_mais_frequente(2)': dados[6],'cidade_origem_mais_frequente(3)': dados[7]
+                        }
                 df = pd.DataFrame(data, index=['valores'])
                 data_inicial = data_i.strftime("%m-%d-%Y")
                 data_final = data_f.strftime("%m-%d-%Y")
                 try:
-                    df.to_csv(f"{Path.home()}\Documents\\rel_reserva_{data_inicial}_{data_final}.csv")
+                    df.to_csv(f"{Path.home()}\Documents\\rel_hospedes_{data_inicial}_{data_final}.csv")
                     self.__tela_relatorio.msg("Relatorio salvo com sucesso em pasta Documents!")
                 except:
                     self.__tela_relatorio.msg("Falha em salvar relatorio :(")
