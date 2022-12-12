@@ -140,11 +140,7 @@ class ControladorRelatorio:
             if opçao == None or opçao == 0 or opçao == sg.WIN_CLOSED:
                 self.__tela_relatorio.close_menu_rel_hospedes()
                 break
-<<<<<<< HEAD
             
-=======
-
->>>>>>> 33b268857568420ceb6c4063da003ff4ebc7af0c
             if opçao == 'exportar':
                 data = {'total_reservas': dados[0],'media_idade_hospedes(anos)': dados[1],
                     'hospedes_masculinos(%)': dados[2], 'hospedes_femininos(%)': dados[3], 'hospedes_outros_genero($)': dados[4],
